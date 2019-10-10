@@ -38,7 +38,7 @@ class Home extends Component {
                         <Text style={{ color: 'white', fontSize: 24 }}>STONE SUDOKU</Text>
 
                         <View style={styles.playOption}>
-                            <TouchableOpacity style={{ width: '50%', height: '15%' }} onPress={this.navigateGameScreen}>
+                            <TouchableOpacity style={{ width: '60%', height: '25%'}} onPress={this.navigateGameScreen}>
                                 <Text style={{ color: 'white', fontSize: 32 }}>PLAY GAME</Text>
                             </TouchableOpacity>
                         </View>

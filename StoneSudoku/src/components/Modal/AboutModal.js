@@ -10,7 +10,7 @@ const about = props => (
     <ModalTemplate background={AboutBackground} isVisible={props.isVisible} onClose={props.onClose}>
         <View style={[{ width: '55%', height: '55%' }, styles.center]}>
             <ScrollView style={[{ height: '10%', width: '100%' }]}>
-                <Text style={{ textAlign: 'center', color: 'white', marginTop: '50%' }}>
+                <Text style={{ textAlign: 'center', color: 'white', marginTop: '50%', fontSize: 28 }}>
                     HERE WILL BE DETAILS ABOUT GAME
                 </Text>
             </ScrollView>
