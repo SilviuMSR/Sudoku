@@ -4,6 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Home from './Home/Home';
 import Game from './Game/Game';
 import Profile from './Profile/Profile';
+import PreGame from './Game/PreGame';
 
 const ApplicationStack = createStackNavigator({
     Home: {
@@ -14,6 +15,9 @@ const ApplicationStack = createStackNavigator({
     },
     Profile: {
         screen: Profile
+    },
+    PreGame: {
+        screen: PreGame
     }
 }, {
     initialRouteName: 'Home'

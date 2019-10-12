@@ -20,7 +20,7 @@ class Home extends Component {
     }
 
 
-    navigateGameScreen = () => this.props.navigation.navigate('Game');
+    navigatePreGameScreen = () => this.props.navigation.navigate('PreGame');
     navigateProfileScreen = () => this.props.navigation.navigate('Profile');
 
     aboutModalHandler = () => {
@@ -36,10 +36,10 @@ class Home extends Component {
                         <View style={styles.titleContainer}>
                         </View>
                         <View style={styles.optionsContainer}>
-                            <TouchableOpacity style={[styles.optionButton, styles.onTimeGameButton]} onPress={this.navigateProfileScreen}>
+                            <TouchableOpacity style={[styles.optionButton, styles.onTimeGameButton]} onPress={this.navigatePreGameScreen}>
                                 <Image source={OnTimeButton} style={styles.imageStyle} resizeMode="contain" />
                             </TouchableOpacity>
-                            <TouchableOpacity style={[styles.optionButton, styles.simpleGameButton]} onPress={this.navigateProfileScreen}>
+                            <TouchableOpacity style={[styles.optionButton, styles.simpleGameButton]} onPress={this.navigatePreGameScreen}>
                                 <Image source={SimpleButton} style={styles.imageStyle} resizeMode="contain" />
                             </TouchableOpacity>
                         </View>
