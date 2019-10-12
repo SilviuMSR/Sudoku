@@ -3,8 +3,8 @@ import { ImageBackground, StyleSheet, Text, View, ScrollView, TouchableOpacity, 
 
 import ModalTemplate from './ModalTemplate';
 
-import AboutBackground from '../../assets/modal.png';
-import Back from '../../assets/back.png'
+import AboutBackground from '../../assets/Modal/modal.png';
+import Back from '../../assets/Buttons/back.png'
 
 const about = props => (
     <ModalTemplate background={AboutBackground} isVisible={props.isVisible} onClose={props.onClose}>

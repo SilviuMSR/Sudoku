@@ -2,9 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 import BaseScreen from '../../components/BaseScreen/BaseScreen';
-
-import Top from '../../assets/topLiana.png'
-import Back from '../../assets/back.png'
+import Back from '../../assets/Buttons/back.png'
 
 class Profile extends Component {
     static navigationOptions = {
@@ -17,9 +15,6 @@ class Profile extends Component {
         return (
             <BaseScreen>
                 <View style={styles.gameContainer}>
-                    <View style={{ flex: 1 }}>
-                        <Image source={Top} style={{ width: "100%", height: "150%", marginTop: "-8%" }} resizeMode="stretch" />
-                    </View>
                     <View style={styles.titleContainer}>
                         <Text style={{ color: 'white', fontSize: 28, letterSpacing: 2, textAlign: 'center' }}>THIS SCREEN WILL CONTAIN</Text>
                         <Text style={{ color: 'white', fontSize: 24, textAlign: 'center' }}>INFORMATIONS ABOUT CURRENT USER</Text>
@@ -51,7 +46,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         flexDirection: 'row'
     },
- 
+
     aboutGame: {
         flex: 1,
         justifyContent: 'center',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, ImageBackground, SafeAreaView } from 'react-native';
 
-import Background from '../../assets/bg.jpg';
+import Background from '../../assets/Background/bg.jpg';
 
 const styles = StyleSheet.create({
     max: {
