@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, ImageBackground, FlatList } from 'react-native';
 
-import PreGameBackground from '../../assets/Background/preGame.png'
+import PreGameBackground from '../../assets/Background/preGameBg.png'
 import Back from '../../assets/Buttons/back.png'
 import Easy from '../../assets/Buttons/easy.png'
 import Medium from '../../assets/Buttons/medium.png'
@@ -9,13 +9,29 @@ import Hard from '../../assets/Buttons/hard.png'
 
 import Level from '../../components/Level/Level'
 
+import * as CONSTANTS from '../../utils/constants'
+
 class PreGame extends Component {
     static navigationOptions = {
         header: null,
     }
 
     state = {
+        activeLevel: "easy",
         levels: [
+            {
+                name: 'easy',
+                active: true
+            },
+            {
+                name: 'medium',
+                active: false
+            }, {
+                name: 'hard',
+                active: false
+            }
+        ],
+        easy: [
             {
                 id: 1,
                 done: true,
@@ -52,10 +68,58 @@ class PreGame extends Component {
                 name: 'RUNDA 6',
                 time: '01:25'
             },
+        ],
+        medium: [
+            {
+                id: 5,
+                done: false,
+                name: 'RUNDA 5',
+                time: null
+            },
+            {
+                id: 6,
+                done: true,
+                name: 'RUNDA 6',
+                time: '01:25'
+            }
+        ],
+        hard: [
+            {
+                id: 1,
+                done: true,
+                name: 'RUNDA 1',
+                time: '01:25'
+            },
+            {
+                id: 2,
+                done: true,
+                name: 'RUNDA 2',
+                time: '01:25'
+            },
+            {
+                id: 3,
+                done: false,
+                name: 'RUNDA 3',
+                time: null
+            }
         ]
     }
 
     navigateHomeScreen = () => this.props.navigation.navigate('Home');
+
+    selectLevelHandler = difficulty => {
+        let levelsCopy = [ ...this.state.levels ]
+        let levelIndex = levelsCopy.findIndex(level => level.name === difficulty)
+
+        if (levelIndex > -1) {
+            levelsCopy.forEach(level => level.active = false)
+            levelsCopy[levelIndex].active = true
+            this.setState({
+                levels: levelsCopy,
+                activeLevel: difficulty
+            })
+        }
+    }
 
     render() {
         return (
@@ -64,24 +128,24 @@ class PreGame extends Component {
                     <View style={styles.preGameContainer}>
                         <View style={styles.headerContainer}>
                             <View style={styles.headerOptions}>
-                                <TouchableOpacity style={[styles.optionButton]} onPress={this.navigatePreGameScreen}>
-                                    <Image source={Easy} style={styles.imageStyle} resizeMode="contain" />
+                                <TouchableOpacity style={[styles.optionButton], { marginLeft: '8%' }} onPress={() => this.selectLevelHandler("easy")}>
+                                    <Image source={Easy} style={[styles.imageStyle]} resizeMode="contain" />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.optionButton]} onPress={this.navigatePreGameScreen}>
+                                <TouchableOpacity style={[styles.optionButton], { marginLeft: '2%', marginRight: '2%' }} onPress={() => this.selectLevelHandler("medium")}>
                                     <Image source={Medium} style={styles.imageStyle} resizeMode="contain" />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.optionButton]} onPress={this.navigatePreGameScreen}>
+                                <TouchableOpacity style={[styles.optionButton], { marginRight: '10%' }} onPress={() => this.selectLevelHandler("hard")}>
                                     <Image source={Hard} style={styles.imageStyle} resizeMode="contain" />
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.headerTitle}>
-                                <Text style={styles.headerTitleText}>AI COMPLETAT 1/10</Text>
+                                <Text style={styles.headerTitleText}>AI COMPLETAT 1/<Text>{this.state[this.state.activeLevel].length}</Text></Text>
                             </View>
                         </View>
                         <View style={styles.levelsContainer}>
                             <FlatList
                                 contentContainerStyle={styles.list}
-                                data={this.state.levels.map(level => {
+                                data={this.state[this.state.activeLevel].map(level => {
                                     return ({ ...level, key: level.id || '' })
                                 })}
                                 renderItem={({ item }) => <Level
@@ -93,7 +157,7 @@ class PreGame extends Component {
                         </View>
                         <View style={styles.footerContainer}>
                             <TouchableOpacity style={[styles.backButton]} onPress={this.navigateHomeScreen}>
-                                <Image source={Back} style={styles.imageStyle} resizeMode="contain" />
+                                <Image source={Back} style={styles.backButtonImage} resizeMode="contain" />
                             </TouchableOpacity>
                         </View>
                     </View>
@@ -122,11 +186,11 @@ const styles = StyleSheet.create({
     headerOptions: {
         flex: 1,
         flexDirection: 'row',
-        marginTop: '15%'
+        marginTop: '7%'
     },
     headerTitle: {
         flex: 1,
-        marginTop: '5%',
+        marginTop: '10%',
         justifyContent: 'flex-end',
         alignItems: 'center',
     },
@@ -139,8 +203,6 @@ const styles = StyleSheet.create({
     optionButton: {
         flex: 1
     },
-    backButton: {
-    },
     levelsContainer: {
         marginTop: "10%",
         flex: 5,
@@ -148,10 +210,19 @@ const styles = StyleSheet.create({
     },
     footerContainer: {
         flex: 0.5,
+        marginBottom: '1%',
     },
     imageStyle: {
-        width: "100%",
-        height: "100%"
+        width: 110,
+        height: 120
+    },
+    backButtonImage: {
+        height: '100%',
+        width: '100%'
+    },
+    backButton: {
+        width: '20%',
+        height: '100%'
     }
 })
 
