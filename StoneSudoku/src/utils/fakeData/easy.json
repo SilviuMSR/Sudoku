@@ -1,0 +1,36 @@
+[
+    {
+        "id": 1,
+        "done": true,
+        "name": "RUNDA 1",
+        "time": "01:25",
+        "lines": [
+            [{ "number": "", "i": 0, "j": 0 }, { "number": "", "i": 0, "j": 1 },
+            { "number": 2, "i": 0, "j": 2 }, { "number": 3, "i": 0, "j": 3 }],
+            [{ "number": 3, "i": 1, "j": 0 }, { "number": "", "i": 1, "j": 1 },
+            { "number": 4, "i": 1, "j": 2 }, { "number": 2, "i": 1, "j": 3 }],
+            [{ "number": "", "i": 2, "j": 0 }, { "number": "", "i": 2, "j": 1 },
+            { "number": "", "i": 2, "j": 2 }, { "number": 4, "i": 2, "j": 3 }],
+            [{ "number": "", "i": 3, "j": 0 }, { "number": "", "i": 3, "j": 1 },
+            { "number": 3, "i": 3, "j": 2 }, { "number": 2, "i": 3, "j": 3 }]
+
+        ]
+    },
+    {
+        "id": 2,
+        "done": true,
+        "name": "RUNDA 2",
+        "time": "01:25",
+        "lines": [
+            [{ "number": 1, "i": 0, "j": 0 }, { "number": "", "i": 0, "j": 1 },
+            { "number": 2, "i": 0, "j": 2 }, { "number": 3, "i": 0, "j": 3 }],
+            [{ "number": 3, "i": 1, "j": 0 }, { "number": "", "i": 1, "j": 1 },
+            { "number": 4, "i": 1, "j": 2 }, { "number": 2, "i": 1, "j": 3 }],
+            [{ "number": "", "i": 2, "j": 0 }, { "number": "", "i": 2, "j": 1 },
+            { "number": 3, "i": 2, "j": 2 }, { "number": 4, "i": 2, "j": 3 }],
+            [{ "number": "", "i": 3, "j": 0 }, { "number": "", "i": 3, "j": 1 },
+            { "number": 3, "i": 3, "j": 2 }, { "number": 2, "i": 3, "j": 3 }]
+
+        ]
+    }
+]

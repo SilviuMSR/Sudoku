@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, ImageBackground, FlatList } from 'react-native';
+import { connect } from 'react-redux';
+import axios from 'axios'
 
 import PreGameBackground from '../../assets/Background/preGameBg.png'
 import Back from '../../assets/Buttons/back.png'
@@ -10,6 +12,7 @@ import Hard from '../../assets/Buttons/hard.png'
 import Level from '../../components/Level/Level'
 
 import * as CONSTANTS from '../../utils/constants'
+import * as LEVELS from '../../store/actions/level'
 
 class PreGame extends Component {
     static navigationOptions = {
@@ -36,51 +39,80 @@ class PreGame extends Component {
                 id: 1,
                 done: true,
                 name: 'RUNDA 1',
-                time: '01:25'
+                time: '01:25',
+                lines: [
+                    [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
+                    { number: '2', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
+                    [{ number: '2', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
+                    { number: '2', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
+                    [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
+                    { number: '', i: 2, j: 2 }, { number: '4', i: 2, j: 3 }],
+                    [{ number: '7', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
+                    { number: '3', i: 3, j: 2 }, { number: '2', i: 3, j: 3 }]
+
+                ]
             },
             {
                 id: 2,
                 done: true,
                 name: 'RUNDA 2',
-                time: '01:25'
+                time: '01:25',
+                lines: [
+                    [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
+                    { number: '1', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
+                    [{ number: '2', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
+                    { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
+                    [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
+                    { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
+                    [{ number: '1', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
+                    { number: '3', i: 3, j: 2 }, { number: '', i: 3, j: 3 }]
+
+                ]
             },
-            {
-                id: 3,
-                done: false,
-                name: 'RUNDA 3',
-                time: null
-            },
-            {
-                id: 4,
-                done: true,
-                name: 'RUNDA 4',
-                time: '01:25'
-            },
-            {
-                id: 5,
-                done: false,
-                name: 'RUNDA 5',
-                time: null
-            },
-            {
-                id: 6,
-                done: true,
-                name: 'RUNDA 6',
-                time: '01:25'
-            },
+
         ],
         medium: [
             {
                 id: 5,
                 done: false,
                 name: 'RUNDA 5',
-                time: null
+                time: null,
+                lines: [
+                    [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
+                    { number: '1', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
+                    [{ number: '2', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
+                    { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
+                    [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
+                    { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
+                    [{ number: '1', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
+                    { number: '3', i: 3, j: 2 }, { number: '', i: 3, j: 3 }],
+                    [{ number: '1', i: 4, j: 0 }, { number: '', i: 4, j: 1 },
+                    { number: '3', i: 4, j: 2 }, { number: '', i: 4, j: 3 }],
+                    [{ number: '1', i: 5, j: 0 }, { number: '', i: 5, j: 1 },
+                    { number: '3', i: 5, j: 2 }, { number: '', i: 5, j: 3 }]
+
+                ]
             },
             {
                 id: 6,
                 done: true,
                 name: 'RUNDA 6',
-                time: '01:25'
+                time: '01:25',
+                lines: [
+                    [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
+                    { number: '1', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
+                    [{ number: '2', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
+                    { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
+                    [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
+                    { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
+                    [{ number: '1', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
+                    { number: '3', i: 3, j: 2 }, { number: '', i: 3, j: 3 }],
+                    [{ number: '1', i: 4, j: 0 }, { number: '', i: 4, j: 1 },
+                    { number: '3', i: 4, j: 2 }, { number: '', i: 4, j: 3 }],
+                    [{ number: '1', i: 5, j: 0 }, { number: '', i: 5, j: 1 },
+                    { number: '3', i: 5, j: 2 }, { number: '', i: 5, j: 3 }]
+
+                ]
             }
         ],
         hard: [
@@ -88,27 +120,35 @@ class PreGame extends Component {
                 id: 1,
                 done: true,
                 name: 'RUNDA 1',
-                time: '01:25'
+                time: '01:25',
+                lines: [
+                    [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
+                    { number: '1', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
+                    [{ number: '2', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
+                    { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
+                    [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
+                    { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
+                    [{ number: '1', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
+                    { number: '3', i: 3, j: 2 }, { number: '', i: 3, j: 3 }],
+                    [{ number: '1', i: 4, j: 0 }, { number: '', i: 4, j: 1 },
+                    { number: '3', i: 4, j: 2 }, { number: '', i: 4, j: 3 }],
+                    [{ number: '1', i: 5, j: 0 }, { number: '', i: 5, j: 1 },
+                    { number: '3', i: 5, j: 2 }, { number: '', i: 5, j: 3 }],
+                    [{ number: '1', i: 6, j: 0 }, { number: '', i: 6, j: 1 },
+                    { number: '3', i: 6, j: 2 }, { number: '', i: 6, j: 3 }],
+                    [{ number: '1', i: 7, j: 0 }, { number: '', i: 7, j: 1 },
+                    { number: '3', i: 7, j: 2 }, { number: '', i: 7, j: 3 }]
+
+                ]
             },
-            {
-                id: 2,
-                done: true,
-                name: 'RUNDA 2',
-                time: '01:25'
-            },
-            {
-                id: 3,
-                done: false,
-                name: 'RUNDA 3',
-                time: null
-            }
         ]
     }
 
     navigateHomeScreen = () => this.props.navigation.navigate('Home');
+    navigateGameScreen = () => this.props.navigation.navigate('Game');
 
     selectLevelHandler = difficulty => {
-        let levelsCopy = [ ...this.state.levels ]
+        let levelsCopy = [...this.state.levels]
         let levelIndex = levelsCopy.findIndex(level => level.name === difficulty)
 
         if (levelIndex > -1) {
@@ -119,6 +159,12 @@ class PreGame extends Component {
                 activeLevel: difficulty
             })
         }
+    }
+
+    playGameHandler = levelId => {
+        this.props.setDifficulty(this.state.activeLevel)
+        this.props.setLevelId(levelId)
+        this.navigateGameScreen()
     }
 
     render() {
@@ -149,6 +195,8 @@ class PreGame extends Component {
                                     return ({ ...level, key: level.id || '' })
                                 })}
                                 renderItem={({ item }) => <Level
+                                    playGame={(levelId) => this.playGameHandler(levelId)}
+                                    level={item}
                                     done={item.done || ''}
                                     name={item.name || ''}
                                     time={item.time || null}
@@ -226,4 +274,16 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PreGame;
+const mapStateToProps = state => ({
+    level: state.level
+})
+
+const mapDispatchToProps = dispatch => ({
+    setDifficulty: difficultyLevel => dispatch(LEVELS.setDifficulty(difficultyLevel)),
+    setLevelId: levelId => dispatch(LEVELS.setLevelId(levelId))
+})
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(PreGame); 

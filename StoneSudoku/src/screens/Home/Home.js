@@ -9,6 +9,7 @@ import Profile from '../../assets/Buttons/profileYellow.png'
 import OnTimeButton from '../../assets/Buttons/onTimeButton.png'
 import SimpleButton from '../../assets/Buttons/simpleButton.png'
 
+
 class Home extends Component {
     static navigationOptions = {
         header: null,

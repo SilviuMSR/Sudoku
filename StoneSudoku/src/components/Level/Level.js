@@ -10,7 +10,7 @@ export default props => (
     <View style={{ marginTop: 12 }}>
         <ImageBackground source={props.done ? DoneLevel : NotDoneLevel} style={styles.imageStyle} resizeMode="contain">
             <Text style={styles.roundTimeText}>{props.time}</Text>
-            <TouchableOpacity style={styles.touchableOpacityContainer}>
+            <TouchableOpacity onPress={() => props.playGame(props.level.id)} style={styles.touchableOpacityContainer}>
                 <ImageBackground source={PlayButton} style={styles.playButton} resizeMode="center">
                     <Text style={styles.playText}>JOACA</Text>
                 </ImageBackground>
