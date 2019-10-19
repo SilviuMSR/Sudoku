@@ -25,7 +25,7 @@ class Game extends Component {
             { number: '', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
 
             [{ number: '', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
-            { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
+            { number: '', i: 1, j: 2 }, { number: '', i: 1, j: 3 }],
 
             [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
             { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
@@ -34,6 +34,8 @@ class Game extends Component {
             { number: '', i: 3, j: 2 }, { number: '', i: 3, j: 3 }],
         ],
         keyboard: [],
+        predfinedPositions: [],
+        deleteOption: false,
         pressedKey: null
     }
 
@@ -42,10 +44,62 @@ class Game extends Component {
         this.setState({
             keyboard: CONSTANTS.KEYBOARD
         })
+        this.setPredefinedPositions()
         // get level wtih difficulty and levelid set in redux and set it in state
     }
 
     navigatePreGameScreen = () => this.props.navigation.navigate('PreGame');
+
+    deleteNumber = (i, j) => {
+        if (this.checkExistInPredefinedPositions(i, j)) {
+            alert('You can t delete predefined positions')
+            return
+        }
+        let linesCopy = [...this.state.lines]
+        linesCopy.forEach(line => {
+            let iIndex = line.findIndex(idx => idx.i === i)
+            let jIndex = line.findIndex(idx => idx.j === j)
+
+            if (iIndex > -1 && jIndex > -1) {
+                line.forEach(subline => {
+                    if (subline.i === i && subline.j === j) {
+                        subline.number = ''
+                    }
+                })
+            }
+        })
+
+        this.setState({ lines: linesCopy })
+    }
+
+    checkExistInPredefinedPositions = (i, j) => {
+        let iIndex = this.state.predfinedPositions.findIndex(idx => idx.i === i)
+        let jIndex = this.state.predfinedPositions.findIndex(idx => idx.j === j)
+
+        if (iIndex > -1 && jIndex > -1) {
+            return true
+        }
+
+        return false
+    }
+
+    setPredefinedPositions = () => {
+        let sublines = []
+        this.state.lines.forEach(line => {
+            line.forEach(subline => sublines.push(subline))
+        })
+        let filterSublines = sublines.filter(field => field.number !== '')
+        filterSublines = filterSublines.map(subline => {
+            return ({
+                i: subline.i,
+                j: subline.j
+            })
+        })
+
+        this.setState({
+            predfinedPositions: filterSublines
+        })
+    }
 
     resetState = () => {
         this.setState({
@@ -54,7 +108,7 @@ class Game extends Component {
                 { number: '', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
 
                 [{ number: '', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
-                { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
+                { number: '', i: 1, j: 2 }, { number: '', i: 1, j: 3 }],
 
                 [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
                 { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
@@ -101,39 +155,45 @@ class Game extends Component {
     }
 
     modifyCellContent = (i, j) => {
-        if (!this.state.pressedKey) {
+        if (!this.state.pressedKey && !this.state.deleteOption) {
             alert('You have to select a number')
             return
         }
-        let linesCopy = [...this.state.lines]
-        linesCopy.forEach(line => {
-            let iIndex = line.findIndex(idx => idx.i === i)
-            let jIndex = line.findIndex(idx => idx.j === j)
 
-            if (iIndex > -1 && jIndex > -1) {
-                let lineCheck = this.checkAlreadyExistInLinesOrColumn(line)
-                let associatedColumn = this.getAssociatedColumn(j)
-                let columnCheck = this.checkAlreadyExistInLinesOrColumn(associatedColumn)
-                if (!lineCheck && !columnCheck) {
-                    line.forEach(subline => {
-                        if (subline.i === i && subline.j === j) {
-                            subline.number = this.state.pressedKey
-                            let gameFinished = this.checkGameFinished()
-                            if (gameFinished) {
-                                alert('Game finished')
-                                this.resetState()
+        if (this.state.deleteOption) {
+            this.deleteNumber(i, j)
+        }
+        else {
+            let linesCopy = [...this.state.lines]
+            linesCopy.forEach(line => {
+                let iIndex = line.findIndex(idx => idx.i === i)
+                let jIndex = line.findIndex(idx => idx.j === j)
+
+                if (iIndex > -1 && jIndex > -1) {
+                    let lineCheck = this.checkAlreadyExistInLinesOrColumn(line)
+                    let associatedColumn = this.getAssociatedColumn(j)
+                    let columnCheck = this.checkAlreadyExistInLinesOrColumn(associatedColumn)
+                    if (!lineCheck && !columnCheck) {
+                        line.forEach(subline => {
+                            if (subline.i === i && subline.j === j) {
+                                subline.number = this.state.pressedKey
+                                let gameFinished = this.checkGameFinished()
+                                if (gameFinished) {
+                                    alert('Game finished')
+                                    this.resetState()
+                                }
                             }
-                        }
-                    })
+                        })
+                    }
+                    else {
+                        alert('Wrong position')
+                        return
+                    }
                 }
-                else {
-                    alert('Wrong position')
-                    return
-                }
-            }
-        })
+            })
 
-        this.setState({ lines: linesCopy })
+            this.setState({ lines: linesCopy })
+        }
     }
 
     onKeyPressHandler = pressedKey => {
@@ -152,6 +212,7 @@ class Game extends Component {
 
         this.setState({
             pressedKey,
+            deleteOption: false,
             keyboard: keyboardCopy
         })
     }
@@ -177,6 +238,7 @@ class Game extends Component {
                         </ImageBackground>
                     </View>
                     <View style={styles.keyboardContainer}>
+                        <Button title="delete" onPress={() => this.setState({ deleteOption: true, pressedKey: null })}></Button>
                         {
                             this.state.keyboard.slice(0, this.state.lines.length).map(key => {
                                 return (
