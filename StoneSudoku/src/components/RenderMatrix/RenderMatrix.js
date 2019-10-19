@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 import { StyleSheet, ImageBackground, TouchableOpacity, View, Dimensions, Text, TextInput } from 'react-native';
 
-import Grey from '../../assets/Buttons/square.png';
+import StoneSquare from '../../assets/Buttons/stoneSquare.png';
+import PurpleSquare from '../../assets/Buttons/purpleSquare.png'
+import PurpleHolder from '../../assets/Others/purpleHolder.png'
+import Square from '../../assets/Buttons/square.png'
 
 export default class RenderMatrix extends Component {
 
@@ -16,22 +19,32 @@ export default class RenderMatrix extends Component {
         this.props.modifyCell(lineContent.i, lineContent.j)
     }
 
-    generateSquare = (number, lineContent) => (
-        <View style={[styles.center, styles.squareView, { height: Number(this.state.cellSize), width: Number(this.state.cellSize) }]}>
-            <TouchableOpacity onPress={() => this.checkClicked(lineContent)} style={[styles.center, styles.max]}>
-                <ImageBackground source={Grey} style={[styles.center, styles.max]} resizeMode='stretch'>
-                    <Text>{number ? number : ''}</Text>
-                </ImageBackground>
-            </TouchableOpacity>
-        </View>
-    )
+    generateSquare = (number, lineContent, selectedNumber) => {
+        return (
+            <View style={[styles.center, styles.squareView, { height: Number(this.state.cellSize), width: Number(this.state.cellSize) }]}>
+                {
+                    number ?
+                        <TouchableOpacity onPress={() => this.checkClicked(lineContent)} style={[styles.center, styles.max]}>
+                            <ImageBackground source={parseInt(number) === parseInt(selectedNumber) ? Square : PurpleSquare} style={[styles.center, styles.max]} resizeMode='stretch'>
+                                <Text style={{ color: 'white', fontSize: 30, fontWeight: 'bold' }}>{number ? number : ''}</Text>
+                            </ImageBackground>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity onPress={() => this.checkClicked(lineContent)} style={[styles.center, styles.max]}>
+                            <ImageBackground source={PurpleHolder} style={[styles.center, styles.max]} resizeMode='stretch'>
+                            </ImageBackground>
+                        </TouchableOpacity>
+                }
+            </View>
+        )
+    }
 
     render() {
         return (
             <View style={[styles.buttonSize, styles.backgroundColor, styles.center]}>
                 {this.props.lines.map(line => (
                     <View style={[styles.lineView, styles.center, { height: this.state.cellSize }]}>
-                        {line.map(lineContent => this.generateSquare(lineContent.number, lineContent))}
+                        {line.map(lineContent => this.generateSquare(lineContent.number, lineContent, this.props.selectedNumber))}
                     </View>
                 ))}
             </View>

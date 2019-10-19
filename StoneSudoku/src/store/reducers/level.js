@@ -20,12 +20,12 @@ const levelReducer = (state = initialState, action) => {
         case SET_LEVEL_ID:
             return {
                 ...state,
-                difficulty: action.payload
+                levelId: action.payload
             }
         case RESET_LEVEL_ID:
             return {
                 ...state,
-                difficulty: null
+                levelId: null
             }
         default:
             return state;

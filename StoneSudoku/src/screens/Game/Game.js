@@ -1,22 +1,18 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, ImageBackground, Button } from 'react-native';
+import { connect } from 'react-redux';
 
 import BaseScreen from '../../components/BaseScreen/BaseScreen';
 import RenderMatrix from '../../components/RenderMatrix/RenderMatrix'
 
 import CONSTANTS from '../../utils/constants'
 
-import One from '../../assets/Numbers/1.png'
-import Two from '../../assets/Numbers/2.png'
-import Three from '../../assets/Numbers/3.png'
-import Four from '../../assets/Numbers/4.png'
-import Five from '../../assets/Numbers/5.png'
-import Six from '../../assets/Numbers/6.png'
-import Seven from '../../assets/Numbers/7.png'
-import Eight from '../../assets/Numbers/8.png'
-import Nine from '../../assets/Numbers/9.png'
+import TopBar from '../../assets/Others/topBar.png'
+import Board from '../../assets/Others/board.png'
+import StoneSquare from '../../assets/Buttons/stoneSquare.png'
+import CancelButton from '../../assets/Buttons/xButton.png'
+import ResetButton from '../../assets/Buttons/reset.png'
 
-import Back from '../../assets/Buttons/back.png'
 
 class Game extends Component {
     static navigationOptions = {
@@ -27,12 +23,15 @@ class Game extends Component {
         lines: [
             [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
             { number: '', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
+
             [{ number: '', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
             { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
+
             [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
             { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
-            [{ number: '', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
-            { number: '3', i: 3, j: 2 }, { number: '', i: 3, j: 3 }]
+
+            [{ number: '3', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
+            { number: '', i: 3, j: 2 }, { number: '', i: 3, j: 3 }],
         ],
         keyboard: [],
         pressedKey: null
@@ -53,12 +52,15 @@ class Game extends Component {
             lines: [
                 [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
                 { number: '', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
+
                 [{ number: '', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
                 { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
+
                 [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
                 { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
-                [{ number: '', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
-                { number: '3', i: 3, j: 2 }, { number: '', i: 3, j: 3 }]
+
+                [{ number: '3', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
+                { number: '', i: 3, j: 2 }, { number: '', i: 3, j: 3 }],
             ],
             pressedKey: null
         })
@@ -159,91 +161,33 @@ class Game extends Component {
             <BaseScreen>
                 <View style={styles.gameContainer}>
                     <View style={styles.gameDetailsContainer}>
-                        <View style={styles.gameDetailsOption}>
-                            <Text>RUNDA 1</Text>
-                        </View>
-                        <View style={styles.gameDetailsOption}>
-                            <Text>TIMER</Text>
-                            <Button title="Reset" onPress={this.resetState} />
-                        </View>
+                        <ImageBackground source={TopBar} style={{ width: '100%', height: '85%', display: 'flex', flexDirection: 'row' }}>
+                            <TouchableOpacity onPress={this.resetState} style={{ width: 50, height: 50 }}>
+                                <Image source={ResetButton} style={{ width: 50, height: 50 }} />
+                            </TouchableOpacity>
+                            <Text style={{ color: 'white', fontSize: 26, fontWeight: 'bold', marginLeft: '32%' }}>00:00</Text>
+                            <TouchableOpacity onPress={this.navigatePreGameScreen} style={{ width: 50, height: 50, marginLeft: 'auto' }}>
+                                <Image source={CancelButton} style={{ width: 50, height: 50 }} />
+                            </TouchableOpacity>
+                        </ImageBackground>
                     </View>
                     <View style={styles.matrixContainer}>
-                        <RenderMatrix size={6} lines={this.state.lines} modifyCell={(i, j) => this.modifyCellContent(i, j)} />
+                        <ImageBackground source={Board} style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }} resizeMode="stretch">
+                            <RenderMatrix selectedNumber={this.state.pressedKey} size={this.props.level.difficulty === 'easy' ? 6 : this.props.level.difficulty === 'medium' ? 8 : 11} lines={this.state.lines} modifyCell={(i, j) => this.modifyCellContent(i, j)} />
+                        </ImageBackground>
                     </View>
                     <View style={styles.keyboardContainer}>
                         {
-                            this.state.keyboard.map(key => {
-                                if (key.number === 1) {
-                                    return (
-                                        <ImageBackground source={One} style={{ width: 40, height: 40 }} resizeMode="center">
-                                            <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.onKeyPressHandler(key.number)} />
+                            this.state.keyboard.slice(0, this.state.lines.length).map(key => {
+                                return (
+                                    <TouchableOpacity onPress={() => this.onKeyPressHandler(key.number)} style={[styles.center, { width: 40, height: 50, paddingRight: '1%' }]}>
+                                        <ImageBackground source={StoneSquare} style={[styles.center, styles.max]} resizeMode='stretch'>
+                                            <Text style={{ color: 'white', fontSize: 30, fontWeight: 'bold', position: 'relative', bottom: '5%' }}>{key.number}</Text>
                                         </ImageBackground>
-                                    )
-                                }
-                                if (key.number === 2) {
-                                    return (
-                                        <ImageBackground source={Two} style={{ width: 40, height: 40 }} resizeMode="center" >
-                                            <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.onKeyPressHandler(key.number)} />
-                                        </ImageBackground>)
-                                }
-                                if (key.number === 3) {
-                                    return (
-                                        <ImageBackground source={Three} style={{ width: 40, height: 40 }} resizeMode="center" >
-                                            <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.onKeyPressHandler(key.number)} />
-                                        </ImageBackground>
-                                    )
-                                }
-                                if (key.number === 4) {
-                                    return (
-                                        <ImageBackground source={Four} style={{ width: 40, height: 40 }} resizeMode="center" >
-                                            <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.onKeyPressHandler(key.number)} />
-                                        </ImageBackground>
-                                    )
-                                }
-                                if (key.number === 5) {
-                                    return (
-                                        <ImageBackground source={Five} style={{ width: 40, height: 40 }} resizeMode="center" >
-                                            <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.onKeyPressHandler(key.number)} />
-                                        </ImageBackground>
-                                    )
-                                }
-                                if (key.number === 6) {
-                                    return (
-                                        <ImageBackground source={Six} style={{ width: 40, height: 40 }} resizeMode="center" >
-                                            <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.onKeyPressHandler(key.number)} />
-                                        </ImageBackground>
-                                    )
-                                }
-                                if (key.number === 7) {
-                                    return (
-                                        <ImageBackground source={Seven} style={{ width: 40, height: 40 }} resizeMode="center" >
-                                            <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.onKeyPressHandler(key.number)} />
-                                        </ImageBackground>
-                                    )
-                                }
-                                if (key.number === 8) {
-                                    return (
-                                        <ImageBackground source={Eight} style={{ width: 40, height: 40 }} resizeMode="center" >
-                                            <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.onKeyPressHandler(key.number)} />
-                                        </ImageBackground>
-                                    )
-                                }
-                                if (key.number === 9) {
-                                    return (
-                                        <ImageBackground source={Nine} style={{ width: 40, height: 40 }} resizeMode="center" >
-                                            <TouchableOpacity style={{ width: '100%', height: '100%' }} onPress={() => this.onKeyPressHandler(key.number)} />
-                                        </ImageBackground>
-                                    )
-                                }
+                                    </TouchableOpacity>
+                                )
                             })
                         }
-                    </View>
-                    <View style={styles.footerContainer}>
-                        <View style={styles.aboutGame}>
-                            <TouchableOpacity style={{ height: 60, width: 60, marginLeft: '8%' }} onPress={this.navigatePreGameScreen}>
-                                <Image source={Back} style={{ height: "100%", width: "100%" }} resizeMode="contain" />
-                            </TouchableOpacity>
-                        </View>
                     </View>
                 </View>
             </BaseScreen>
@@ -257,7 +201,6 @@ const styles = StyleSheet.create({
     },
     gameDetailsContainer: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: "center"
     },
     gameDetailsOption: {
@@ -266,7 +209,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     matrixContainer: {
-        flex: 2,
+        flex: 5,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -274,18 +217,31 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'center',
-        alignItems: "flex-end"
-    },
-    footerContainer: {
-        flex: 1,
-        justifyContent: 'flex-end',
-        flexDirection: 'row'
+        alignItems: "center"
     },
 
     aboutGame: {
         flex: 1,
         justifyContent: 'center',
+    },
+    max: {
+        width: '100%',
+        height: '100%'
+    },
+    center: {
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 })
 
-export default Game;
+const mapStateToProps = state => ({
+    level: state.level
+})
+
+const mapDispatchToProps = dispatch => ({
+})
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Game); 
