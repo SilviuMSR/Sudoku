@@ -4,6 +4,9 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, ImageBac
 import HomeBackground from '../../assets/Background/goodBg.png';
 import ModalAbout from '../../components/Modal/AboutModal'
 
+import { openDatabase } from 'react-native-sqlite-storage';
+var db = openDatabase({ name: 'UserDatabase.db' });
+
 import About from '../../assets/Buttons/aboutYellow.png'
 import Profile from '../../assets/Buttons/profileYellow.png'
 import OnTimeButton from '../../assets/Buttons/onTimeButton.png'
@@ -20,6 +23,26 @@ class Home extends Component {
         logged: false
     }
 
+    componentDidMount() {
+        db.transaction(function (txn) {
+            txn.executeSql('DROP TABLE IF EXISTS users', []);
+            txn.executeSql(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='users'",
+                [],
+                function (tx, res) {
+                    console.log('item:', res.rows.length);
+                    if (res.rows.length == 0) {
+                        console.log("DROPING TABLE")
+                        txn.executeSql('DROP TABLE IF EXISTS users', []);
+                        txn.executeSql(
+                            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), user_contact INT(10), user_address VARCHAR(255))',
+                            []
+                        );
+                    }
+                }
+            );
+        });
+    }
 
     navigatePreGameScreen = () => this.props.navigation.navigate('PreGame');
     navigateProfileScreen = () => this.props.navigation.navigate('Profile');
