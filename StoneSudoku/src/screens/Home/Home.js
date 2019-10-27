@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, ImageBackground } from 'react-native';
+import { connect } from 'react-redux';
 
 import HomeBackground from '../../assets/Background/goodBg.png';
 import ModalAbout from '../../components/Modal/AboutModal'
-
-import { openDatabase } from 'react-native-sqlite-storage';
-var db = openDatabase({ name: 'UserDatabase.db' });
 
 import About from '../../assets/Buttons/aboutYellow.png'
 import Profile from '../../assets/Buttons/profileYellow.png'
 import OnTimeButton from '../../assets/Buttons/onTimeButton.png'
 import SimpleButton from '../../assets/Buttons/simpleButton.png'
 
+import * as DATABASE from '../../store/actions/database'
+import CONSTANTS from '../../utils/constants'
 
 class Home extends Component {
     static navigationOptions = {
@@ -24,24 +24,64 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        db.transaction(function (txn) {
-            txn.executeSql('DROP TABLE IF EXISTS users', []);
-            txn.executeSql(
-                "SELECT name FROM sqlite_master WHERE type='table' AND name='users'",
-                [],
-                function (tx, res) {
-                    console.log('item:', res.rows.length);
-                    if (res.rows.length == 0) {
-                        console.log("DROPING TABLE")
-                        txn.executeSql('DROP TABLE IF EXISTS users', []);
-                        txn.executeSql(
-                            'CREATE TABLE IF NOT EXISTS users(user_id INTEGER PRIMARY KEY AUTOINCREMENT, user_name VARCHAR(20), user_contact INT(10), user_address VARCHAR(255))',
-                            []
-                        );
-                    }
-                }
-            );
-        });
+        // db.transaction(function (txn) { 
+        //     txn.executeSql(
+        //         "SELECT name FROM sqlite_master WHERE type='table' AND name='users'",
+        //         [],
+        //         function (tx, res) {
+        //             console.log('item:', res.rows.length);
+        //             if (res.rows.length == 0) {
+        //                 console.log("DROPING TABLE")
+        //                 txn.executeSql('DROP TABLE IF EXISTS users', []);
+        //                 txn.executeSql(
+        //                     'CREATE TABLE IF NOT EXISTS users(matrix VARCHAR(255))',
+        //                     []
+        //                 )
+        //                 txn.executeSql(
+        //                     'INSERT INTO users (matrix) values (\'{ "number": "1", "i":"0", "j": "0" } { "number":"", "i":"0", "j": "1" }\')',
+        //                     []
+        //                 )
+
+        //                 txn.executeSql(
+        //                     'SELECT matrix from users',
+        //                     [],
+        //                     function (tx, res) {
+        //                         let arr = []
+        //                         let aa = res.rows.item(0)
+        //                         var splited = aa.matrix.split('}')
+        //                         splited.forEach((splt, index) => {
+        //                             if (index == 2) return
+        //                             arr = arr.concat(JSON.parse(splt.concat('}')))
+        //                         })
+        //                         console.log(arr)
+        //                     }
+        //                 )
+        //             }
+        //         }
+        //     );
+        // });
+        this.props.openDatabaseConnection()
+            .then(() =>
+                this.props.createDatabaseTable()
+                    .then(res => {
+                        if (!res) return Promise.reject({
+                            message: 'CREATE_TABLE_FAIL'
+                        })
+
+                        CONSTANTS.EASY_LEVELS.forEach(level => {
+                            this.props.insertInTable(level)
+                        })
+
+                        CONSTANTS.MEDIUM_LEVELS.forEach(level => {
+                            this.props.insertInTable(level)
+                        })
+
+                        CONSTANTS.HARD_LEVELS.forEach(level => {
+                            this.props.insertInTable(level)
+                        })
+                    })
+            )
+
     }
 
     navigatePreGameScreen = () => this.props.navigation.navigate('PreGame');
@@ -145,4 +185,17 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Home;
+const mapStateToProps = state => ({
+    database: state.database
+})
+
+const mapDispatchToProps = dispatch => ({
+    openDatabaseConnection: () => dispatch(DATABASE.openDatabaseConnection()),
+    createDatabaseTable: () => dispatch(DATABASE.createDatabaseTable()),
+    insertInTable: level => dispatch(DATABASE.insertInTable(level))
+})
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Home); 

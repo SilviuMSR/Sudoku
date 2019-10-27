@@ -13,6 +13,7 @@ import Level from '../../components/Level/Level'
 
 import * as CONSTANTS from '../../utils/constants'
 import * as LEVELS from '../../store/actions/level'
+import * as DATABASE from '../../store/actions/database'
 
 class PreGame extends Component {
     static navigationOptions = {
@@ -35,117 +36,50 @@ class PreGame extends Component {
             }
         ],
         easy: [
-            {
-                id: 1,
-                done: true,
-                name: 'RUNDA 1',
-                time: '01:25',
-                lines: [
-                    [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
-                    { number: '2', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
-                    [{ number: '2', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
-                    { number: '2', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
-                    [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
-                    { number: '', i: 2, j: 2 }, { number: '4', i: 2, j: 3 }],
-                    [{ number: '7', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
-                    { number: '3', i: 3, j: 2 }, { number: '2', i: 3, j: 3 }]
-
-                ]
-            },
-            {
-                id: 2,
-                done: true,
-                name: 'RUNDA 2',
-                time: '01:25',
-                lines: [
-                    [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
-                    { number: '1', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
-                    [{ number: '2', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
-                    { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
-                    [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
-                    { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
-                    [{ number: '1', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
-                    { number: '3', i: 3, j: 2 }, { number: '', i: 3, j: 3 }]
-
-                ]
-            },
 
         ],
         medium: [
-            {
-                id: 5,
-                done: false,
-                name: 'RUNDA 5',
-                time: null,
-                lines: [
-                    [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
-                    { number: '1', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
-                    [{ number: '2', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
-                    { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
-                    [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
-                    { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
-                    [{ number: '1', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
-                    { number: '3', i: 3, j: 2 }, { number: '', i: 3, j: 3 }],
-                    [{ number: '1', i: 4, j: 0 }, { number: '', i: 4, j: 1 },
-                    { number: '3', i: 4, j: 2 }, { number: '', i: 4, j: 3 }],
-                    [{ number: '1', i: 5, j: 0 }, { number: '', i: 5, j: 1 },
-                    { number: '3', i: 5, j: 2 }, { number: '', i: 5, j: 3 }]
 
-                ]
-            },
-            {
-                id: 6,
-                done: true,
-                name: 'RUNDA 6',
-                time: '01:25',
-                lines: [
-                    [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
-                    { number: '1', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
-                    [{ number: '2', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
-                    { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
-                    [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
-                    { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
-                    [{ number: '1', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
-                    { number: '3', i: 3, j: 2 }, { number: '', i: 3, j: 3 }],
-                    [{ number: '1', i: 4, j: 0 }, { number: '', i: 4, j: 1 },
-                    { number: '3', i: 4, j: 2 }, { number: '', i: 4, j: 3 }],
-                    [{ number: '1', i: 5, j: 0 }, { number: '', i: 5, j: 1 },
-                    { number: '3', i: 5, j: 2 }, { number: '', i: 5, j: 3 }]
-
-                ]
-            }
         ],
         hard: [
-            {
-                id: 1,
-                done: true,
-                name: 'RUNDA 1',
-                time: '01:25',
-                lines: [
-                    [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
-                    { number: '1', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
-                    [{ number: '2', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
-                    { number: '', i: 1, j: 2 }, { number: '2', i: 1, j: 3 }],
-                    [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
-                    { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
-                    [{ number: '1', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
-                    { number: '3', i: 3, j: 2 }, { number: '', i: 3, j: 3 }],
-                    [{ number: '1', i: 4, j: 0 }, { number: '', i: 4, j: 1 },
-                    { number: '3', i: 4, j: 2 }, { number: '', i: 4, j: 3 }],
-                    [{ number: '1', i: 5, j: 0 }, { number: '', i: 5, j: 1 },
-                    { number: '3', i: 5, j: 2 }, { number: '', i: 5, j: 3 }],
-                    [{ number: '1', i: 6, j: 0 }, { number: '', i: 6, j: 1 },
-                    { number: '3', i: 6, j: 2 }, { number: '', i: 6, j: 3 }],
-                    [{ number: '1', i: 7, j: 0 }, { number: '', i: 7, j: 1 },
-                    { number: '3', i: 7, j: 2 }, { number: '', i: 7, j: 3 }]
 
-                ]
-            },
         ]
     }
 
     navigateHomeScreen = () => this.props.navigation.navigate('Home');
     navigateGameScreen = () => this.props.navigation.navigate('Game');
+
+    fetchLevels = () => {
+        this.props.getFromTable().then(res => {
+            let easyLevels = []
+            let mediumLevels = []
+            let hardLevels = []
+
+            for (let i = 0; i < res.length; i++) {
+                switch (res.item(i).difficulty) {
+                    case 'easy':
+                        easyLevels = easyLevels.concat(res.item(i))
+                        break
+                    case 'medium':
+                        mediumLevels = mediumLevels.concat(res.item(i))
+                        break
+                    case 'hard':
+                        hardLevels = hardLevels.concat(res.item(i))
+                        break
+                }
+            }
+
+            this.setState({
+                easy: easyLevels,
+                medium: mediumLevels,
+                hard: hardLevels
+            })
+        })
+    }
+
+    componentDidMount() {
+        this.fetchLevels()
+    }
 
     selectLevelHandler = difficulty => {
         let levelsCopy = [...this.state.levels]
@@ -280,7 +214,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setDifficulty: difficultyLevel => dispatch(LEVELS.setDifficulty(difficultyLevel)),
-    setLevelId: levelId => dispatch(LEVELS.setLevelId(levelId))
+    setLevelId: levelId => dispatch(LEVELS.setLevelId(levelId)),
+    getFromTable: () => dispatch(DATABASE.getFromTable())
 })
 
 export default connect(

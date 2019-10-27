@@ -6,6 +6,7 @@ import BaseScreen from '../../components/BaseScreen/BaseScreen';
 import RenderMatrix from '../../components/RenderMatrix/RenderMatrix'
 
 import CONSTANTS from '../../utils/constants'
+import * as DATABASE from '../../store/actions/database'
 
 import TopBar from '../../assets/Others/topBar.png'
 import Board from '../../assets/Others/board.png'
@@ -20,23 +21,33 @@ class Game extends Component {
     }
 
     state = {
-        lines: [
-            [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
-            { number: '', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
-
-            [{ number: '', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
-            { number: '', i: 1, j: 2 }, { number: '', i: 1, j: 3 }],
-
-            [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
-            { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
-
-            [{ number: '3', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
-            { number: '', i: 3, j: 2 }, { number: '', i: 3, j: 3 }],
-        ],
+        lines: [],
         keyboard: [],
         predfinedPositions: [],
         deleteOption: false,
         pressedKey: null
+    }
+
+    fetchCurrentLevel = () => {
+        this.props.getFromTableByOptions(this.props.level.levelId, this.props.level.difficulty).then(res => {
+            let resultArray = []
+            let splitedArray = res.item(0).level.split('}')
+            splitedArray.pop()
+            let countSplitedArray = 1
+            let subArray = []
+            let resultArrayPositions = 0
+            splitedArray.forEach((split, index) => {
+                subArray = subArray.concat(JSON.parse(split.concat('}')))
+                if (countSplitedArray === res.item(0).size) {
+                    resultArray[resultArrayPositions] = subArray
+                    resultArrayPositions = resultArrayPositions + 1
+                    subArray = []
+                    countSplitedArray = 0
+                }
+                countSplitedArray++
+            })
+            this.setState({ lines: resultArray }, () => this.setPredefinedPositions())
+        })
     }
 
     componentDidMount() {
@@ -44,11 +55,11 @@ class Game extends Component {
         this.setState({
             keyboard: CONSTANTS.KEYBOARD
         })
-        this.setPredefinedPositions()
         // get level wtih difficulty and levelid set in redux and set it in state
+        this.fetchCurrentLevel()
     }
 
-    navigatePreGameScreen = () => this.props.navigation.navigate('PreGame');
+    navigateHomeScreen = () => this.props.navigation.navigate('Home');
 
     deleteNumber = (i, j) => {
         if (this.checkExistInPredefinedPositions(i, j)) {
@@ -73,10 +84,8 @@ class Game extends Component {
     }
 
     checkExistInPredefinedPositions = (i, j) => {
-        let iIndex = this.state.predfinedPositions.findIndex(idx => idx.i === i)
-        let jIndex = this.state.predfinedPositions.findIndex(idx => idx.j === j)
-
-        if (iIndex > -1 && jIndex > -1) {
+        let predefIndex = this.state.predfinedPositions.findIndex(idx => idx.i === i && idx.j === j)
+        if (predefIndex > -1) {
             return true
         }
 
@@ -102,20 +111,8 @@ class Game extends Component {
     }
 
     resetState = () => {
+        this.fetchCurrentLevel()
         this.setState({
-            lines: [
-                [{ number: '1', i: 0, j: 0 }, { number: '', i: 0, j: 1 },
-                { number: '', i: 0, j: 2 }, { number: '3', i: 0, j: 3 }],
-
-                [{ number: '', i: 1, j: 0 }, { number: '', i: 1, j: 1 },
-                { number: '', i: 1, j: 2 }, { number: '', i: 1, j: 3 }],
-
-                [{ number: '4', i: 2, j: 0 }, { number: '', i: 2, j: 1 },
-                { number: '', i: 2, j: 2 }, { number: '1', i: 2, j: 3 }],
-
-                [{ number: '3', i: 3, j: 0 }, { number: '', i: 3, j: 1 },
-                { number: '', i: 3, j: 2 }, { number: '', i: 3, j: 3 }],
-            ],
             pressedKey: null
         })
     }
@@ -127,6 +124,10 @@ class Game extends Component {
         })
         let filterSublines = sublines.map(subline => subline.number).filter(number => number === '')
         return filterSublines.length ? false : true
+    }
+
+    gameFinished = () => {
+        this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty).then(() => this.navigateHomeScreen())
     }
 
     checkAlreadyExistInLinesOrColumn = searchIn => {
@@ -160,6 +161,11 @@ class Game extends Component {
             return
         }
 
+        if (this.checkExistInPredefinedPositions(i, j)) {
+            alert('You can t modify predefined positions')
+            return
+        }
+
         if (this.state.deleteOption) {
             this.deleteNumber(i, j)
         }
@@ -179,7 +185,7 @@ class Game extends Component {
                                 subline.number = this.state.pressedKey
                                 let gameFinished = this.checkGameFinished()
                                 if (gameFinished) {
-                                    alert('Game finished')
+                                    this.gameFinished()
                                     this.resetState()
                                 }
                             }
@@ -227,7 +233,7 @@ class Game extends Component {
                                 <Image source={ResetButton} style={{ width: 50, height: 50 }} />
                             </TouchableOpacity>
                             <Text style={{ color: 'white', fontSize: 26, fontWeight: 'bold', marginLeft: '32%' }}>00:00</Text>
-                            <TouchableOpacity onPress={this.navigatePreGameScreen} style={{ width: 50, height: 50, marginLeft: 'auto' }}>
+                            <TouchableOpacity onPress={this.navigateHomeScreen} style={{ width: 50, height: 50, marginLeft: 'auto' }}>
                                 <Image source={CancelButton} style={{ width: 50, height: 50 }} />
                             </TouchableOpacity>
                         </ImageBackground>
@@ -301,6 +307,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
+    getFromTableByOptions: (levelId, difficulty) => dispatch(DATABASE.getFromTableByOptions(levelId, difficulty)),
+    updateLevel: (levelId, difficulty) => dispatch(DATABASE.updateLevel(levelId, difficulty))
 })
 
 export default connect(
