@@ -24,42 +24,6 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        // db.transaction(function (txn) { 
-        //     txn.executeSql(
-        //         "SELECT name FROM sqlite_master WHERE type='table' AND name='users'",
-        //         [],
-        //         function (tx, res) {
-        //             console.log('item:', res.rows.length);
-        //             if (res.rows.length == 0) {
-        //                 console.log("DROPING TABLE")
-        //                 txn.executeSql('DROP TABLE IF EXISTS users', []);
-        //                 txn.executeSql(
-        //                     'CREATE TABLE IF NOT EXISTS users(matrix VARCHAR(255))',
-        //                     []
-        //                 )
-        //                 txn.executeSql(
-        //                     'INSERT INTO users (matrix) values (\'{ "number": "1", "i":"0", "j": "0" } { "number":"", "i":"0", "j": "1" }\')',
-        //                     []
-        //                 )
-
-        //                 txn.executeSql(
-        //                     'SELECT matrix from users',
-        //                     [],
-        //                     function (tx, res) {
-        //                         let arr = []
-        //                         let aa = res.rows.item(0)
-        //                         var splited = aa.matrix.split('}')
-        //                         splited.forEach((splt, index) => {
-        //                             if (index == 2) return
-        //                             arr = arr.concat(JSON.parse(splt.concat('}')))
-        //                         })
-        //                         console.log(arr)
-        //                     }
-        //                 )
-        //             }
-        //         }
-        //     );
-        // });
         this.props.openDatabaseConnection()
             .then(() =>
                 this.props.createDatabaseTable()
