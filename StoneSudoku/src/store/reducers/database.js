@@ -1,7 +1,8 @@
-import { CREATE_DATABASE, CLOSE_DATABASE } from '../actions/actionTypes';
+import { CREATE_DATABASE, CLOSE_DATABASE, SET_USERNAME } from '../actions/actionTypes';
 
 const initialState = {
-    db: null
+    db: null,
+    username: ""
 };
 
 const databaseReducer = (state = initialState, action) => {
@@ -15,6 +16,11 @@ const databaseReducer = (state = initialState, action) => {
             return {
                 ...state,
                 db: null
+            }
+        case SET_USERNAME:
+            return {
+                ...state,
+                username: action.payload
             }
         default:
             return state;

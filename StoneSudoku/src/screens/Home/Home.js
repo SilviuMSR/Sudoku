@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, ImageBackground } from 'react-native';
 import { connect } from 'react-redux';
+import { getUniqueId } from 'react-native-device-info';
 
 import HomeBackground from '../../assets/Background/goodBg.png';
 import ModalAbout from '../../components/Modal/AboutModal'
+import RegisterModal from '../../components/Modal/RegisterModal'
 
 import About from '../../assets/Buttons/aboutYellow.png'
 import Profile from '../../assets/Buttons/profileYellow.png'
@@ -20,32 +22,39 @@ class Home extends Component {
 
     state = {
         showAboutModal: false,
-        logged: false
+        notLogged: true
     }
 
-    componentDidMount() {
+    componentWillMount() {
         this.props.openDatabaseConnection()
             .then(() =>
                 this.props.createDatabaseTable()
                     .then(res => {
-                        if (!res) return Promise.reject({
-                            message: 'CREATE_TABLE_FAIL'
-                        })
+                        this.props.checkExistingUser(getUniqueId()).then(result => {
+                            if (result.length) {
+                                this.props.setConnectedUserName(result.item(0).name)
+                                this.setState({ notLogged: false })
+                            }
+                            else {
+                                if (!res) return Promise.reject({
+                                    message: 'CREATE_TABLE_FAIL'
+                                })
 
-                        CONSTANTS.EASY_LEVELS.forEach(level => {
-                            this.props.insertInTable(level)
-                        })
+                                CONSTANTS.EASY_LEVELS.forEach(level => {
+                                    this.props.insertInTable(level)
+                                })
 
-                        CONSTANTS.MEDIUM_LEVELS.forEach(level => {
-                            this.props.insertInTable(level)
-                        })
+                                CONSTANTS.MEDIUM_LEVELS.forEach(level => {
+                                    this.props.insertInTable(level)
+                                })
 
-                        CONSTANTS.HARD_LEVELS.forEach(level => {
-                            this.props.insertInTable(level)
+                                CONSTANTS.HARD_LEVELS.forEach(level => {
+                                    this.props.insertInTable(level)
+                                })
+                            }
                         })
                     })
             )
-
     }
 
     navigatePreGameScreen = () => this.props.navigation.navigate('PreGame');
@@ -53,6 +62,14 @@ class Home extends Component {
 
     aboutModalHandler = () => {
         this.setState({ showAboutModal: true })
+    }
+
+    onRegisterHandler = username => {
+        this.props.createUser(username, getUniqueId()).then(result => {
+            this.props.setConnectedUserName(username).then(() => {
+                this.setState({ notLogged: false })
+            })
+        })
     }
 
     render() {
@@ -86,6 +103,7 @@ class Home extends Component {
                         <ModalAbout
                             isVisible={this.state.showAboutModal}
                             onClose={() => this.setState({ showAboutModal: false })} />
+                        <RegisterModal onRegister={username => this.onRegisterHandler(username)} isVisible={this.state.notLogged} />
                     </View>
                 </ImageBackground>
             </SafeAreaView>
@@ -156,7 +174,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     openDatabaseConnection: () => dispatch(DATABASE.openDatabaseConnection()),
     createDatabaseTable: () => dispatch(DATABASE.createDatabaseTable()),
-    insertInTable: level => dispatch(DATABASE.insertInTable(level))
+    insertInTable: level => dispatch(DATABASE.insertInTable(level)),
+    checkExistingUser: phoneId => dispatch(DATABASE.checkExistingUser(phoneId)),
+    setConnectedUserName: username => dispatch(DATABASE.setConnectedUserName(username)),
+    createUser: (username, phoneId) => dispatch(DATABASE.createUser(username, phoneId))
 })
 
 export default connect(

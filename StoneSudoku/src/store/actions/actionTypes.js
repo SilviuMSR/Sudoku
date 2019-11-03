@@ -7,3 +7,5 @@ export const RESET_LEVEL_ID = 'RESET_LEVEL_ID'
 
 export const CREATE_DATABASE = 'CREATE_DATABASE'
 export const CLOSE_DATABASE = 'CLOSE_DATABASE'
+
+export const SET_USERNAME = 'SET_USERNAME'
