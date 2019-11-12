@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import BaseScreen from '../../components/BaseScreen/BaseScreen';
 import RenderMatrix from '../../components/RenderMatrix/RenderMatrix'
+import WarningModal from '../../components/Modal/WarningModal'
 
 import CONSTANTS from '../../utils/constants'
 import * as DATABASE from '../../store/actions/database'
@@ -23,6 +24,8 @@ class Game extends Component {
     state = {
         lines: [],
         keyboard: [],
+        openWarningModal: false,
+        warningMessage: "",
         predfinedPositions: [],
         deleteOption: false,
         pressedKey: null
@@ -61,9 +64,13 @@ class Game extends Component {
 
     navigateHomeScreen = () => this.props.navigation.navigate('Home');
 
+    setWarningModalHandler = text => this.setState({ warningMessage: text, openWarningModal: true })
+
+    closeWarningModalHandler = () => this.setState({ warningMessage: "", openWarningModal: false })
+
     deleteNumber = (i, j) => {
         if (this.checkExistInPredefinedPositions(i, j)) {
-            alert('You can t delete predefined positions')
+            this.setWarningModalHandler("You can t delete predefined positions")
             return
         }
         let linesCopy = [...this.state.lines]
@@ -157,12 +164,12 @@ class Game extends Component {
 
     modifyCellContent = (i, j) => {
         if (!this.state.pressedKey && !this.state.deleteOption) {
-            alert('You have to select a number')
+            this.setWarningModalHandler("You have to select a number")
             return
         }
 
         if (this.checkExistInPredefinedPositions(i, j)) {
-            alert('You can t modify predefined positions')
+            this.setWarningModalHandler("You can't modify predefined positions")
             return
         }
 
@@ -192,7 +199,7 @@ class Game extends Component {
                         })
                     }
                     else {
-                        alert('Wrong position')
+                        this.setWarningModalHandler("Wrong position")
                         return
                     }
                 }
@@ -227,6 +234,7 @@ class Game extends Component {
         return (
             <BaseScreen>
                 <View style={styles.gameContainer}>
+                    <WarningModal isVisible={this.state.openWarningModal} text={this.state.warningMessage} onClose={() => this.setState({ warningMessage: "", openWarningModal: false })} />
                     <View style={styles.gameDetailsContainer}>
                         <ImageBackground source={TopBar} style={{ width: '100%', height: '85%', display: 'flex', flexDirection: 'row' }}>
                             <TouchableOpacity onPress={this.resetState} style={{ width: 50, height: 50 }}>
