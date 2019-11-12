@@ -145,6 +145,77 @@ class Game extends Component {
         }
     }
 
+    checkAlreadyExistInSquare = (i, j) => {
+        let halfLength = this.state.lines.length / 2
+        let returnedValue = false
+
+        if (i >= 0 && i < halfLength && j >= 0 && j < halfLength) {
+            for (let idxI = 0; idxI < halfLength; idxI++) {
+                for (let idxJ = 0; idxJ < halfLength; idxJ++) {
+                    this.state.lines.forEach(ln => {
+                        let index = ln.findIndex(line => Number(line.i) === Number(idxI) && Number(line.j) === Number(idxJ))
+                        if (index > -1) {
+                            if (Number(ln[index].number) === Number(this.state.pressedKey)) {
+                                returnedValue = true
+                                return true
+                            }
+                        }
+                    })
+                }
+            }
+        }
+
+        if (i >= halfLength && i <= this.state.lines.length - 1 && j >= 0 && j < halfLength) {
+            for (let idxI = halfLength; idxI <= this.state.lines.length - 1; idxI++) {
+                for (let idxJ = 0; idxJ < halfLength; idxJ++) {
+                    this.state.lines.forEach(ln => {
+                        let index = ln.findIndex(line => Number(line.i) === Number(idxI) && Number(line.j) === Number(idxJ))
+                        if (index > -1) {
+                            if (Number(ln[index].number) === Number(this.state.pressedKey)) {
+                                returnedValue = true
+                                return true
+                            }
+                        }
+                    })
+                }
+            }
+        }
+
+
+        if (i >= 0 && i < halfLength && j >= halfLength && j <= this.state.length - 1) {
+            for (let idxI = 0; idxI < halfLength; idxI++) {
+                for (let idxJ = halfLength; idxJ <= this.state.lines.length - 1; idxJ++) {
+                    this.state.lines.forEach(ln => {
+                        let index = ln.findIndex(line => Number(line.i) === Number(idxI) && Number(line.j) === Number(idxJ))
+                        if (index > -1) {
+                            if (Number(ln[index].number) === Number(this.state.pressedKey)) {
+                                returnedValue = true
+                                return true
+                            }
+                        }
+                    })
+                }
+            }
+        }
+
+        if (i >= halfLength && i <= this.state.lines.length - 1 && j >= halfLength && j <= this.state.lines.length - 1) {
+            for (let idxI = halfLength; idxI <= this.state.lines.length - 1; idxI++) {
+                for (let idxJ = halfLength; idxJ <= this.state.lines.length - 1; idxJ++) {
+                    this.state.lines.forEach(ln => {
+                        let index = ln.findIndex(line => Number(line.i) === Number(idxI) && Number(line.j) === Number(idxJ))
+                        if (index > -1) {
+                            if (Number(ln[index].number) === Number(this.state.pressedKey)) {
+                                returnedValue = true
+                                return true
+                            }
+                        }
+                    })
+                }
+            }
+        }
+        return returnedValue
+    }
+
     getAssociatedColumn = j => {
         let linesCopy = [...this.state.lines]
         let associatedColumn = []
@@ -185,9 +256,10 @@ class Game extends Component {
 
                 if (iIndex > -1 && jIndex > -1) {
                     let lineCheck = this.checkAlreadyExistInLinesOrColumn(line)
+                    let squareCheck = this.checkAlreadyExistInSquare(i, j)
                     let associatedColumn = this.getAssociatedColumn(j)
                     let columnCheck = this.checkAlreadyExistInLinesOrColumn(associatedColumn)
-                    if (!lineCheck && !columnCheck) {
+                    if (!lineCheck && !columnCheck && !squareCheck) {
                         line.forEach(subline => {
                             if (subline.i === i && subline.j === j) {
                                 subline.number = this.state.pressedKey
