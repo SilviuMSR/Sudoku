@@ -134,7 +134,8 @@ class Game extends Component {
     }
 
     gameFinished = () => {
-        this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty).then(() => this.navigateHomeScreen())
+        this.setWarningModalHandler("Congrats! You finished the game.")
+        this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty)
     }
 
     checkAlreadyExistInLinesOrColumn = searchIn => {
@@ -193,7 +194,7 @@ class Game extends Component {
                                 let gameFinished = this.checkGameFinished()
                                 if (gameFinished) {
                                     this.gameFinished()
-                                    this.resetState()
+                                    //this.resetState()
                                 }
                             }
                         })
