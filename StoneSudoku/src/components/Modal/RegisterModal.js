@@ -19,13 +19,17 @@ class Register extends Component {
     render() {
         return (
             <ModalTemplate background={AboutBackground} isVisible={this.props.isVisible} onClose={this.props.onClose} >
-                <View style={[{ width: '55%', height: '55%' }, styles.center]}>
+                <View style={[styles.center, { width: '60%', height: '45%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }]}>
+                    <Text style={{ fontSize: 18, fontWeight: 'bold', paddingBottom: 8 }}>Please insert your username!</Text>
                     <TextInput
-                        style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+                        style={{ width: '100%', textAlign: 'center', fontSize: 22, height: 45, borderColor: 'gray', borderWidth: 1 }}
                         onChangeText={text => this.onChangeText(text)}
                         value={this.state.username}
                     />
-                    <Button title="Done" onPress={() => this.props.onRegister(this.state.username)}></Button>
+                    <View style={{ paddingTop: 8 }}>
+                        <Button title="Register me!" color="green" onPress={() => this.props.onRegister(this.state.username)}></Button>
+                    </View>
+
                 </View>
             </ModalTemplate>
         )
