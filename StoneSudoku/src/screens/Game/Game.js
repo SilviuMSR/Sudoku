@@ -244,7 +244,11 @@ class Game extends Component {
                         </ImageBackground>
                     </View>
                     <View style={styles.keyboardContainer}>
-                        <Button title="delete" onPress={() => this.setState({ deleteOption: true, pressedKey: null })}></Button>
+                        <TouchableOpacity onPress={() => this.setState({ deleteOption: true, pressedKey: null })} style={[styles.center, { width: 40, height: 50, paddingRight: '1%' }]}>
+                            <ImageBackground source={StoneSquare} style={[styles.center, styles.max]} resizeMode='stretch'>
+                                <Text style={{ color: 'white', fontSize: 30, fontWeight: 'bold', position: 'relative', bottom: '5%' }}>X</Text>
+                            </ImageBackground>
+                        </TouchableOpacity>
                         {
                             this.state.keyboard.slice(0, this.state.lines.length).map(key => {
                                 return (
