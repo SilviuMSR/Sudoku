@@ -6,6 +6,7 @@ import BaseScreen from '../../components/BaseScreen/BaseScreen';
 import RenderMatrix from '../../components/RenderMatrix/RenderMatrix'
 import WarningModal from '../../components/Modal/WarningModal'
 import Timer from '../../components/Timer/Timer'
+import PauseModal from '../../components/Modal/PausedModal'
 
 import CONSTANTS from '../../utils/constants'
 import * as DATABASE from '../../store/actions/database'
@@ -36,7 +37,9 @@ class Game extends Component {
         pressedKey: null,
         currentLevel: null,
         levelCompleted: false,
-        levelTime: ""
+        levelTime: "",
+        pausedModal: false,
+        isReseted: false
     }
 
     fetchCurrentLevel = () => {
@@ -128,9 +131,12 @@ class Game extends Component {
     resetState = () => {
         this.fetchCurrentLevel()
         this.setState({
-            pressedKey: null
+            pressedKey: null,
+            isReseted: true,
+            pausedModal: false
         })
     }
+
 
     checkGameFinished = () => {
         let sublines = []
@@ -334,6 +340,10 @@ class Game extends Component {
         })
     }
 
+    onPauseHandler = () => this.setState({ pausedModal: true, isReseted: false })
+
+    resetPauseModalHandler = () => this.setState({ pausedModal: false })
+
     render() {
         return (
             <BaseScreen>
@@ -341,17 +351,16 @@ class Game extends Component {
                     <WarningModal isVisible={this.state.openWarningModal} text={this.state.warningMessage} onClose={() => this.setState({ warningMessage: "", openWarningModal: false })} />
                     <View style={[styles.gameDetailsContainer, { width: size }]}>
                         <ImageBackground source={TopBar} style={{ width: '100%', height: '85%', display: 'flex', flexDirection: 'row' }}>
-                            <TouchableOpacity onPress={this.resetState} style={{ width: topBarElement, height: topBarElement }}>
-                                <Image source={ResetButton} style={{ width: topBarElement, height: topBarElement }} />
-                            </TouchableOpacity>
-                            <View style={{ paddingTop: 6, marginLeft: (size * 0.87 / 2) - topBarElement }}>
+                            <View style={{ paddingTop: 6, marginLeft: (size * 0.87 / 2) }}>
                                 <Timer
                                     onTimeExpired={() => { }}
                                     count={0}
+                                    isReseted={this.state.isReseted}
+                                    isPaused={this.state.pausedModal}
                                     setCompletedTime={(seconds, minutes) => this.setCompletedTimeHandler(seconds, minutes)}
                                     levelCompleted={this.state.levelCompleted} />
                             </View>
-                            <TouchableOpacity onPress={this.navigateHomeScreen} style={{ width: topBarElement, height: topBarElement, marginLeft: 'auto' }}>
+                            <TouchableOpacity onPress={this.onPauseHandler} style={{ width: topBarElement, height: topBarElement, marginLeft: 'auto' }}>
                                 <Image source={CancelButton} style={{ width: topBarElement, height: topBarElement }} />
                             </TouchableOpacity>
                         </ImageBackground>
@@ -380,6 +389,7 @@ class Game extends Component {
                         }
                     </View>
                 </View>
+                <PauseModal onReset={this.resetState} onResume={this.resetPauseModalHandler} isVisible={this.state.pausedModal} />
             </BaseScreen>
         );
     }
