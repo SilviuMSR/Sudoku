@@ -3,7 +3,7 @@ import { ImageBackground, StyleSheet, Text, View, ScrollView, TouchableOpacity, 
 
 import ModalTemplate from './ModalTemplate';
 
-import AboutBackground from '../../assets/Modal/modal.png';
+import AboutBackground from '../../assets/Modal/winModal.png';
 import Back from '../../assets/Buttons/back.png'
 
 import CONSTANTS from '../../utils/constants'
@@ -11,7 +11,7 @@ import CONSTANTS from '../../utils/constants'
 const elementSize = Math.floor(CONSTANTS.screenWidth / 6.5)
 const textSize = Math.floor(elementSize * 2 / 4.1)
 
-class Warning extends Component {
+class Win extends Component {
 
     state = {
     }
@@ -57,4 +57,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Warning;
+export default Win;

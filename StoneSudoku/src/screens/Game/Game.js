@@ -7,6 +7,7 @@ import RenderMatrix from '../../components/RenderMatrix/RenderMatrix'
 import WarningModal from '../../components/Modal/WarningModal'
 import Timer from '../../components/Timer/Timer'
 import PauseModal from '../../components/Modal/PausedModal'
+import WinModal from '../../components/Modal/WinModal'
 
 import CONSTANTS from '../../utils/constants'
 import * as DATABASE from '../../store/actions/database'
@@ -37,6 +38,7 @@ class Game extends Component {
         pressedKey: null,
         currentLevel: null,
         levelCompleted: false,
+        openWinModal: false,
         levelTime: "",
         pausedModal: false,
         isReseted: false
@@ -148,7 +150,7 @@ class Game extends Component {
     }
 
     gameFinished = () => {
-        this.setWarningModalHandler("Congrats! You finished the game.")
+        this.setState({ openWinModal: true })
         this.setState({ levelCompleted: true })
     }
 
@@ -347,6 +349,7 @@ class Game extends Component {
             <BaseScreen>
                 <View style={styles.gameContainer}>
                     <WarningModal isVisible={this.state.openWarningModal} text={this.state.warningMessage} onClose={() => this.setState({ warningMessage: "", openWarningModal: false })} />
+                    <WinModal isVisible={this.state.openWinModal} onClose={() => this.setState({ openWinModal: false })} />
                     <View style={[styles.gameDetailsContainer, { width: size }]}>
                         <ImageBackground source={TopBar} style={{ width: '100%', height: '85%', display: 'flex', flexDirection: 'row' }}>
                             <View style={{ paddingTop: 6, marginLeft: (size * 0.87 / 2) }}>
