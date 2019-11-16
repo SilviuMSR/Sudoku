@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, ImageBackground, FlatList } from 'react-native';
 import { connect } from 'react-redux';
-import axios from 'axios'
 
-import PreGameBackground from '../../assets/Background/preGameBg.png'
+import Background from '../../assets/Background/bg.jpg'
+import Header from '../../assets/Background/prehead.png'
 import Back from '../../assets/Buttons/back.png'
 import Easy from '../../assets/Buttons/easy.png'
 import Medium from '../../assets/Buttons/medium.png'
@@ -15,8 +15,8 @@ import CONSTANTS from '../../utils/constants'
 import * as LEVELS from '../../store/actions/level'
 import * as DATABASE from '../../store/actions/database'
 
-const size = CONSTANTS.screenWidth
-
+const size = CONSTANTS.screenWidth 
+const screenHeight = CONSTANTS.screenHeight
 
 class PreGame extends Component {
     static navigationOptions = {
@@ -108,10 +108,10 @@ class PreGame extends Component {
 
         return (
             <SafeAreaView style={styles.max}>
-                <ImageBackground source={PreGameBackground} style={styles.max} resizeMode='cover'>
+                <ImageBackground source={Background} style={styles.max} resizeMode='cover'>
                     <View style={styles.preGameContainer}>
-                        <View style={styles.headerContainer}>
-                            <View style={[styles.headerOptions, { width: size }]}>
+                        <ImageBackground source={Header} style={styles.headerContainer}>
+                            <View style={[styles.headerOptions, { width: size}]}>
                                 <TouchableOpacity style={[styles.optionButton], {}} onPress={() => this.selectLevelHandler("easy")}>
                                     <Image source={Easy} style={[styles.imageStyle]} resizeMode="contain" />
                                 </TouchableOpacity>
@@ -122,10 +122,10 @@ class PreGame extends Component {
                                     <Image source={Hard} style={styles.imageStyle} resizeMode="contain" />
                                 </TouchableOpacity>
                             </View>
-                            <View style={styles.headerTitle}>
+                            {/* <View style={styles.headerTitle}>
                                 <Text style={styles.headerTitleText}>AI COMPLETAT 1/<Text>{this.state[this.state.activeLevel].length}</Text></Text>
-                            </View>
-                        </View>
+                            </View> */}
+                        </ImageBackground>
                         <View style={styles.levelsContainer}>
                             <FlatList
                                 contentContainerStyle={styles.list}
@@ -156,7 +156,7 @@ class PreGame extends Component {
 const styles = StyleSheet.create({
     max: {
         width: '100%',
-        height: '100%'
+        height: '100%',
     },
     list: {
         paddingLeft: 5,
@@ -169,12 +169,12 @@ const styles = StyleSheet.create({
     },
     headerContainer: {
         flex: 2,
+        justifyContent: 'center'
     },
     headerOptions: {
-        position: 'relative',
+        paddingTop: 14,
         flexDirection: 'row',
         justifyContent: 'center',
-        top: '14%'
     },
     headerTitle: {
         flex: 1,

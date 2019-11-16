@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
     },
     imageSize: {
         width: '100%',
-        height: '80%'
+        height: '88%'
     },
     center: {
         justifyContent: 'center',

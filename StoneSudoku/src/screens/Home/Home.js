@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, SafeAreaView, ImageBac
 import { connect } from 'react-redux';
 import { getUniqueId } from 'react-native-device-info';
 
-import HomeBackground from '../../assets/Background/goodBg.png';
+import HomeBackground from '../../assets/Background/good.png';
+import ButtonsContainer from '../../assets/Others/homebuttonscontainer.png'
 import ModalAbout from '../../components/Modal/AboutModal'
 import RegisterModal from '../../components/Modal/RegisterModal'
 
@@ -16,6 +17,8 @@ import * as DATABASE from '../../store/actions/database'
 import CONSTANTS from '../../utils/constants'
 
 const bottomElementSize = Math.floor(CONSTANTS.screenWidth / 7.5) - 2
+const screenWidth = CONSTANTS.screenWidth
+const screenHeight = CONSTANTS.screenHeight
 
 class Home extends Component {
     static navigationOptions = {
@@ -80,25 +83,27 @@ class Home extends Component {
             <SafeAreaView style={styles.max}>
                 <ImageBackground source={HomeBackground} style={styles.max} resizeMode='cover'>
                     <View style={styles.homeContainer}>
-                        <View style={styles.titleContainer}>
-                        </View>
-                        <View style={styles.optionsContainer}>
-                            <TouchableOpacity style={[styles.optionButton, styles.onTimeGameButton]} onPress={this.navigatePreGameScreen}>
-                                <Image source={OnTimeButton} style={styles.imageStyle} resizeMode="contain" />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.optionButton, styles.simpleGameButton]} onPress={this.navigatePreGameScreen}>
-                                <Image source={SimpleButton} style={styles.imageStyle} resizeMode="contain" />
-                            </TouchableOpacity>
+                        <View style={{ flex: 4, width: '100%', justifyContent: 'flex-end', alignItems: 'center' }}>
+                            <ImageBackground imageStyle={{ height: screenHeight / 2}} style={{ width: screenWidth - 75, height: screenHeight / 2 }} resizeMode='contain' source={ButtonsContainer}>
+                                <View style={styles.optionsContainer}>
+                                    <TouchableOpacity style={[styles.optionButton, styles.onTimeGameButton]} onPress={this.navigatePreGameScreen}>
+                                        <Image source={OnTimeButton} style={styles.imageStyle} resizeMode="contain" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={[styles.optionButton, styles.simpleGameButton]} onPress={this.navigatePreGameScreen}>
+                                        <Image source={SimpleButton} style={styles.imageStyle} resizeMode="contain" />
+                                    </TouchableOpacity>
+                                </View>
+                            </ImageBackground>
                         </View>
                         <View style={styles.footerContainer}>
                             <View style={styles.aboutGame}>
                                 <TouchableOpacity style={styles.touchableOpacityFooter} onPress={this.aboutModalHandler}>
-                                    <Image source={About} style={styles.imageStyle} resizeMode="contain" />
+                                    <Image source={About} style={styles.imageStyleFooter} resizeMode="contain" />
                                 </TouchableOpacity>
                             </View>
                             <View style={styles.profile}>
                                 <TouchableOpacity style={styles.touchableOpacityFooter} onPress={this.navigateProfileScreen}>
-                                    <Image source={Profile} style={styles.imageStyle} resizeMode="contain" />
+                                    <Image source={Profile} style={styles.imageStyleFooter} resizeMode="contain" />
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -119,7 +124,10 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     homeContainer: {
-        flex: 1
+        flex: 1,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     titleContainer: {
         flex: 1,
@@ -127,7 +135,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     optionsContainer: {
-        flex: 3,
+        flex: 4,
+        display: 'flex',
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -135,12 +144,14 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     simpleGameButton: {
-        marginTop: '5%',
-        height: '15%'
+        justifyContent: 'flex-start',
+        marginLeft: '50%',
+        paddingBottom: 90,
     },
     onTimeGameButton: {
-        marginTop: '25%',
-        height: '14%'
+        paddingTop: 90,
+        justifyContent: 'flex-end',
+        marginLeft: '50%'
     },
     footerContainer: {
         flex: 1,
@@ -164,6 +175,10 @@ const styles = StyleSheet.create({
         width: bottomElementSize
     },
     imageStyle: {
+        width: "50%",
+        height: "50%"
+    },
+    imageStyleFooter: {
         width: "100%",
         height: "100%"
     }

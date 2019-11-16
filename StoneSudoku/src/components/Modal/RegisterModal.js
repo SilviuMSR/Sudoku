@@ -3,8 +3,14 @@ import { ImageBackground, StyleSheet, Text, View, ScrollView, TouchableOpacity, 
 
 import ModalTemplate from './ModalTemplate';
 
+import CONSTANTS from '../../utils/constants'
+
 import AboutBackground from '../../assets/Modal/modal.png';
-import Back from '../../assets/Buttons/back.png'
+
+const screenHeight = CONSTANTS.screenHeight
+
+const elementSize = Math.floor(CONSTANTS.screenWidth / 10)
+const textSize = Math.floor(elementSize * 2 / 4.1)
 
 class Register extends Component {
 
@@ -19,10 +25,10 @@ class Register extends Component {
     render() {
         return (
             <ModalTemplate background={AboutBackground} isVisible={this.props.isVisible} onClose={this.props.onClose} >
-                <View style={[styles.center, { width: '60%', height: '45%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }]}>
-                    <Text style={{ fontSize: 18, fontWeight: 'bold', paddingBottom: 8 }}>Please insert your username!</Text>
+                <View style={[styles.center, {paddingTop: screenHeight / 11.3, width: '60%', height: screenHeight / 1.5, display: 'flex', flexDirection: 'column', justifyContent: 'center' }]}>
+                    <Text style={{ fontSize: textSize, fontWeight: 'bold', paddingBottom: 8, textAlign: 'center' }}>Please insert your username!</Text>
                     <TextInput
-                        style={{ width: '100%', textAlign: 'center', fontSize: 22, height: 45, borderColor: 'gray', borderWidth: 1 }}
+                        style={{ width: '100%', textAlign: 'center', fontSize: textSize, height: 45, borderColor: 'gray', borderWidth: 1 }}
                         onChangeText={text => this.onChangeText(text)}
                         value={this.state.username}
                     />
