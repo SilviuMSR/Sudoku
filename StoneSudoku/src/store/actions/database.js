@@ -93,10 +93,10 @@ export const getFromTableByOptions = (levelId, difficulty) => (dispatch, getStat
     })
 })
 
-export const updateLevel = (levelId, difficulty) => (dispatch, getState) => new Promise((resolve, reject) => {
+export const updateLevel = (levelId, difficulty, time) => (dispatch, getState) => new Promise((resolve, reject) => {
     const { db } = getState().database;
     return db.transaction(tx => {
-        tx.executeSql("UPDATE levels SET done=? WHERE id=? AND difficulty=?", [1, levelId, difficulty], (tx, res) => {
+        tx.executeSql("UPDATE levels SET done=?, time=? WHERE id=? AND difficulty=?", [1, time, levelId, difficulty], (tx, res) => {
             return resolve(res.rows)
         })
         err => reject(err.message)

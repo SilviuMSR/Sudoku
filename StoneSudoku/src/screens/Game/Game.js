@@ -34,7 +34,9 @@ class Game extends Component {
         predfinedPositions: [],
         deleteOption: false,
         pressedKey: null,
-        levelCompleted: false
+        currentLevel: null,
+        levelCompleted: false,
+        levelTime: ""
     }
 
     fetchCurrentLevel = () => {
@@ -55,7 +57,7 @@ class Game extends Component {
                 }
                 countSplitedArray++
             })
-            this.setState({ lines: resultArray }, () => this.setPredefinedPositions())
+            this.setState({ lines: resultArray, currentLevel: res.item(0) }, () => this.setPredefinedPositions())
         })
     }
 
@@ -141,7 +143,6 @@ class Game extends Component {
 
     gameFinished = () => {
         this.setWarningModalHandler("Congrats! You finished the game.")
-        this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty)
         this.setState({ levelCompleted: true })
     }
 
@@ -311,8 +312,26 @@ class Game extends Component {
     }
 
     setCompletedTimeHandler = (seconds, minutes) => {
-        this.setState({ levelCompleted: false })
-        alert(seconds, minutes)
+        let levelTime = ""
+        if (minutes < 10) levelTime = levelTime.concat("0").concat(minutes).concat(":")
+        if (minutes >= 10) levelTime = levelTime.concat(minutes).concat(":")
+        if (seconds < 10) levelTime = levelTime.concat("0").concat(seconds)
+        if (seconds >= 10) levelTime = levelTime.concat(seconds)
+
+        this.setState({ levelCompleted: false, levelTime: levelTime }, () => {
+            if (this.state.currentLevel.done !== 1) {
+                this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty, this.state.levelTime)
+            }
+            else {
+                let timeSplitCurrentLevel = this.state.currentLevel.time.split(":")
+                if (Number(timeSplitCurrentLevel[0] > Number(minutes))) {
+                    this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty, this.state.levelTime)
+                }
+                else if (Number(timeSplitCurrentLevel[1] > Number(seconds))) {
+                    this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty, this.state.levelTime)
+                }
+            }
+        })
     }
 
     render() {
@@ -411,7 +430,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     getFromTableByOptions: (levelId, difficulty) => dispatch(DATABASE.getFromTableByOptions(levelId, difficulty)),
-    updateLevel: (levelId, difficulty) => dispatch(DATABASE.updateLevel(levelId, difficulty))
+    updateLevel: (levelId, difficulty, time) => dispatch(DATABASE.updateLevel(levelId, difficulty, time)),
 })
 
 export default connect(
