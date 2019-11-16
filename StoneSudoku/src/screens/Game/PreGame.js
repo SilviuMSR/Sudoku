@@ -11,9 +11,11 @@ import Hard from '../../assets/Buttons/hard.png'
 
 import Level from '../../components/Level/Level'
 
-import * as CONSTANTS from '../../utils/constants'
+import CONSTANTS from '../../utils/constants'
 import * as LEVELS from '../../store/actions/level'
 import * as DATABASE from '../../store/actions/database'
+
+const size = CONSTANTS.screenWidth
 
 class PreGame extends Component {
     static navigationOptions = {
@@ -102,19 +104,20 @@ class PreGame extends Component {
     }
 
     render() {
+
         return (
             <SafeAreaView style={styles.max}>
                 <ImageBackground source={PreGameBackground} style={styles.max} resizeMode='cover'>
                     <View style={styles.preGameContainer}>
                         <View style={styles.headerContainer}>
-                            <View style={styles.headerOptions}>
-                                <TouchableOpacity style={[styles.optionButton], { marginLeft: '8%' }} onPress={() => this.selectLevelHandler("easy")}>
+                            <View style={[styles.headerOptions, { width: size }]}>
+                                <TouchableOpacity style={[styles.optionButton], {}} onPress={() => this.selectLevelHandler("easy")}>
                                     <Image source={Easy} style={[styles.imageStyle]} resizeMode="contain" />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.optionButton], { marginLeft: '2%', marginRight: '2%' }} onPress={() => this.selectLevelHandler("medium")}>
+                                <TouchableOpacity style={[styles.optionButton], {}} onPress={() => this.selectLevelHandler("medium")}>
                                     <Image source={Medium} style={styles.imageStyle} resizeMode="contain" />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={[styles.optionButton], { marginRight: '10%' }} onPress={() => this.selectLevelHandler("hard")}>
+                                <TouchableOpacity style={[styles.optionButton], {}} onPress={() => this.selectLevelHandler("hard")}>
                                     <Image source={Hard} style={styles.imageStyle} resizeMode="contain" />
                                 </TouchableOpacity>
                             </View>
@@ -166,9 +169,10 @@ const styles = StyleSheet.create({
         flex: 2,
     },
     headerOptions: {
-        flex: 1,
+        position: 'relative',
         flexDirection: 'row',
-        marginTop: '7%'
+        justifyContent: 'center',
+        top: '14%'
     },
     headerTitle: {
         flex: 1,
@@ -195,8 +199,9 @@ const styles = StyleSheet.create({
         marginBottom: '1%',
     },
     imageStyle: {
-        width: 110,
-        height: 120
+        marginRight: 8,
+        width: size / 4,
+        height: size / 7.5
     },
     backButtonImage: {
         height: '100%',

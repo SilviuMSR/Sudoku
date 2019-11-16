@@ -15,6 +15,10 @@ import StoneSquare from '../../assets/Buttons/stoneSquare.png'
 import CancelButton from '../../assets/Buttons/xButton.png'
 import ResetButton from '../../assets/Buttons/reset.png'
 
+const size = CONSTANTS.screenWidth
+const elementSize = Math.floor(CONSTANTS.screenWidth / 10) - 2
+const topBarElement = Math.floor(CONSTANTS.screenWidth / 7.5) - 2
+const textSize = Math.floor(elementSize * 2 / 3)
 
 class Game extends Component {
     static navigationOptions = {
@@ -308,14 +312,16 @@ class Game extends Component {
             <BaseScreen>
                 <View style={styles.gameContainer}>
                     <WarningModal isVisible={this.state.openWarningModal} text={this.state.warningMessage} onClose={() => this.setState({ warningMessage: "", openWarningModal: false })} />
-                    <View style={styles.gameDetailsContainer}>
+                    <View style={[styles.gameDetailsContainer, { width: size }]}>
                         <ImageBackground source={TopBar} style={{ width: '100%', height: '85%', display: 'flex', flexDirection: 'row' }}>
-                            <TouchableOpacity onPress={this.resetState} style={{ width: 50, height: 50 }}>
-                                <Image source={ResetButton} style={{ width: 50, height: 50 }} />
+                            <TouchableOpacity onPress={this.resetState} style={{ width: topBarElement, height: topBarElement }}>
+                                <Image source={ResetButton} style={{ width: topBarElement, height: topBarElement }} />
                             </TouchableOpacity>
-                            <Text style={{ color: 'white', fontSize: 26, fontWeight: 'bold', marginLeft: '32%' }}>00:00</Text>
-                            <TouchableOpacity onPress={this.navigateHomeScreen} style={{ width: 50, height: 50, marginLeft: 'auto' }}>
-                                <Image source={CancelButton} style={{ width: 50, height: 50 }} />
+                            <View style={{ paddingTop: 6, marginLeft: (size * 0.87 / 2) - topBarElement }}>
+                                <Text style={{ color: 'white', fontSize: textSize, fontWeight: 'bold' }}>02:38</Text>
+                            </View>
+                            <TouchableOpacity onPress={this.navigateHomeScreen} style={{ width: topBarElement, height: topBarElement, marginLeft: 'auto' }}>
+                                <Image source={CancelButton} style={{ width: topBarElement, height: topBarElement }} />
                             </TouchableOpacity>
                         </ImageBackground>
                     </View>
@@ -325,17 +331,17 @@ class Game extends Component {
                         </ImageBackground>
                     </View>
                     <View style={styles.keyboardContainer}>
-                        <TouchableOpacity onPress={() => this.setState({ deleteOption: true, pressedKey: null })} style={[styles.center, { width: 40, height: 50, paddingRight: '1%' }]}>
+                        <TouchableOpacity onPress={() => this.setState({ deleteOption: true, pressedKey: null })} style={[styles.center, { width: elementSize, height: elementSize, paddingRight: '1%' }]}>
                             <ImageBackground source={StoneSquare} style={[styles.center, styles.max]} resizeMode='stretch'>
-                                <Text style={{ color: 'white', fontSize: 30, fontWeight: 'bold', position: 'relative', bottom: '5%' }}>X</Text>
+                                <Text style={{ color: 'white', fontSize: textSize, fontWeight: 'bold', position: 'relative', bottom: '5%' }}>X</Text>
                             </ImageBackground>
                         </TouchableOpacity>
                         {
                             this.state.keyboard.slice(0, this.state.lines.length).map(key => {
                                 return (
-                                    <TouchableOpacity onPress={() => this.onKeyPressHandler(key.number)} style={[styles.center, { width: 40, height: 50, paddingRight: '1%' }]}>
+                                    <TouchableOpacity onPress={() => this.onKeyPressHandler(key.number)} style={[styles.center, { width: elementSize, height: elementSize, paddingRight: '1%' }]}>
                                         <ImageBackground source={StoneSquare} style={[styles.center, styles.max]} resizeMode='stretch'>
-                                            <Text style={{ color: 'white', fontSize: 30, fontWeight: 'bold', position: 'relative', bottom: '5%' }}>{key.number}</Text>
+                                            <Text style={{ color: 'white', fontSize: textSize, fontWeight: 'bold', position: 'relative', bottom: '5%' }}>{key.number}</Text>
                                         </ImageBackground>
                                     </TouchableOpacity>
                                 )

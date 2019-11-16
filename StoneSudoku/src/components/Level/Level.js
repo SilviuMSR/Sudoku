@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity } from
 import DoneLevel from '../../assets/Others/doneLevel.png'
 import NotDoneLevel from '../../assets/Others/notDone.png'
 import PlayButton from '../../assets/Buttons/playButton.png'
-
+import CONSTANTS from '../../utils/constants'
 
 export default props => (
     <View style={{ marginTop: 12 }}>
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
         height: 180
     },
     playButton: {
-        height: 35,
+        height: 33,
         position: 'relative',
         top: '50%'
     },

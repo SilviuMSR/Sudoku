@@ -1,4 +1,7 @@
+import { Dimensions } from 'react-native';
+
 export default {
+    screenWidth: Dimensions.get('window').width,
     MODAL_BACKGROUND_COLOR: '#696969',
     LEVELS: ['easy', 'medium', 'hard'],
     KEYBOARD: [

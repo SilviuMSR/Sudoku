@@ -15,6 +15,8 @@ import SimpleButton from '../../assets/Buttons/simpleButton.png'
 import * as DATABASE from '../../store/actions/database'
 import CONSTANTS from '../../utils/constants'
 
+const bottomElementSize = Math.floor(CONSTANTS.screenWidth / 7.5) - 2
+
 class Home extends Component {
     static navigationOptions = {
         header: null,
@@ -158,8 +160,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     touchableOpacityFooter: {
-        height: 60,
-        width: 60
+        height: bottomElementSize,
+        width: bottomElementSize
     },
     imageStyle: {
         width: "100%",
