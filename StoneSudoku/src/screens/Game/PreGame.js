@@ -17,6 +17,7 @@ import * as DATABASE from '../../store/actions/database'
 
 const size = CONSTANTS.screenWidth
 
+
 class PreGame extends Component {
     static navigationOptions = {
         header: null,
@@ -158,6 +159,7 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     list: {
+        paddingLeft: 5,
         justifyContent: 'center',
         flexDirection: 'row',
         flexWrap: 'wrap'

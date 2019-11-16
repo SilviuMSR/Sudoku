@@ -6,8 +6,10 @@ import NotDoneLevel from '../../assets/Others/notDone.png'
 import PlayButton from '../../assets/Buttons/playButton.png'
 import CONSTANTS from '../../utils/constants'
 
+const size = CONSTANTS.screenWidth / 2.2
+
 export default props => (
-    <View style={{ marginTop: 12 }}>
+    <View style={{ marginTop: 12, paddingRight: 12 }}>
         <ImageBackground source={props.done === 1 ? DoneLevel : NotDoneLevel} style={styles.imageStyle} resizeMode="contain">
             <Text style={styles.roundTimeText}>{props.time}</Text>
             <TouchableOpacity onPress={() => props.playGame(props.level.id)} style={styles.touchableOpacityContainer}>
@@ -25,7 +27,7 @@ const styles = StyleSheet.create({
         marginTop: '17%'
     },
     imageStyle: {
-        width: 180,
+        width: size,
         height: 180
     },
     playButton: {
