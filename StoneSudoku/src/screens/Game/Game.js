@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import BaseScreen from '../../components/BaseScreen/BaseScreen';
 import RenderMatrix from '../../components/RenderMatrix/RenderMatrix'
 import WarningModal from '../../components/Modal/WarningModal'
+import Timer from '../../components/Timer/Timer'
 
 import CONSTANTS from '../../utils/constants'
 import * as DATABASE from '../../store/actions/database'
@@ -18,7 +19,7 @@ import ResetButton from '../../assets/Buttons/reset.png'
 const size = CONSTANTS.screenWidth
 const elementSize = Math.floor(CONSTANTS.screenWidth / 10) - 2
 const topBarElement = Math.floor(CONSTANTS.screenWidth / 7.5) - 2
-const textSize = Math.floor(elementSize * 2 / 3)
+const textSize = Math.floor(topBarElement * 2 / 3)
 
 class Game extends Component {
     static navigationOptions = {
@@ -32,7 +33,8 @@ class Game extends Component {
         warningMessage: "",
         predfinedPositions: [],
         deleteOption: false,
-        pressedKey: null
+        pressedKey: null,
+        levelCompleted: false
     }
 
     fetchCurrentLevel = () => {
@@ -140,6 +142,7 @@ class Game extends Component {
     gameFinished = () => {
         this.setWarningModalHandler("Congrats! You finished the game.")
         this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty)
+        this.setState({ levelCompleted: true })
     }
 
     checkAlreadyExistInLinesOrColumn = searchIn => {
@@ -307,6 +310,11 @@ class Game extends Component {
         })
     }
 
+    setCompletedTimeHandler = (seconds, minutes) => {
+        this.setState({ levelCompleted: false })
+        alert(seconds, minutes)
+    }
+
     render() {
         return (
             <BaseScreen>
@@ -318,7 +326,11 @@ class Game extends Component {
                                 <Image source={ResetButton} style={{ width: topBarElement, height: topBarElement }} />
                             </TouchableOpacity>
                             <View style={{ paddingTop: 6, marginLeft: (size * 0.87 / 2) - topBarElement }}>
-                                <Text style={{ color: 'white', fontSize: textSize, fontWeight: 'bold' }}>02:38</Text>
+                                <Timer
+                                    onTimeExpired={() => { }}
+                                    count={0}
+                                    setCompletedTime={(seconds, minutes) => this.setCompletedTimeHandler(seconds, minutes)}
+                                    levelCompleted={this.state.levelCompleted} />
                             </View>
                             <TouchableOpacity onPress={this.navigateHomeScreen} style={{ width: topBarElement, height: topBarElement, marginLeft: 'auto' }}>
                                 <Image source={CancelButton} style={{ width: topBarElement, height: topBarElement }} />
