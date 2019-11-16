@@ -27,7 +27,8 @@ class Home extends Component {
 
     state = {
         showAboutModal: false,
-        notLogged: true
+        notLogged: true,
+        renderPage: false
     }
 
     componentWillMount() {
@@ -38,7 +39,7 @@ class Home extends Component {
                         this.props.checkExistingUser(getUniqueId()).then(result => {
                             if (result.length) {
                                 this.props.setConnectedUserName(result.item(0).name)
-                                this.setState({ notLogged: false })
+                                this.setState({ notLogged: false, renderPage: true })
                             }
                             else {
                                 if (!res) return Promise.reject({
@@ -56,6 +57,7 @@ class Home extends Component {
                                 CONSTANTS.HARD_LEVELS.forEach(level => {
                                     this.props.insertInTable(level)
                                 })
+                                this.setState({ renderPage: true })
                             }
                         })
                     })
@@ -78,43 +80,45 @@ class Home extends Component {
     }
 
     render() {
-        return (
-
-            <SafeAreaView style={styles.max}>
-                <ImageBackground source={HomeBackground} style={styles.max} resizeMode='cover'>
-                    <View style={styles.homeContainer}>
-                        <View style={{ flex: 4, width: '100%', justifyContent: 'flex-end', alignItems: 'center' }}>
-                            <ImageBackground imageStyle={{ height: screenHeight / 2}} style={{ width: screenWidth - 75, height: screenHeight / 2 }} resizeMode='contain' source={ButtonsContainer}>
-                                <View style={styles.optionsContainer}>
-                                    <TouchableOpacity style={[styles.optionButton, styles.onTimeGameButton]} onPress={this.navigatePreGameScreen}>
-                                        <Image source={OnTimeButton} style={styles.imageStyle} resizeMode="contain" />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={[styles.optionButton, styles.simpleGameButton]} onPress={this.navigatePreGameScreen}>
-                                        <Image source={SimpleButton} style={styles.imageStyle} resizeMode="contain" />
+        if (this.state.renderPage) {
+            return (
+                <SafeAreaView style={styles.max}>
+                    <ImageBackground source={HomeBackground} style={styles.max} resizeMode='cover'>
+                        <View style={styles.homeContainer}>
+                            <View style={{ flex: 4, width: '100%', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                <ImageBackground imageStyle={{ height: screenHeight / 2 }} style={{ width: screenWidth - 75, height: screenHeight / 2 }} resizeMode='contain' source={ButtonsContainer}>
+                                    <View style={styles.optionsContainer}>
+                                        <TouchableOpacity style={[styles.optionButton, styles.onTimeGameButton]} onPress={this.navigatePreGameScreen}>
+                                            <Image source={OnTimeButton} style={styles.imageStyle} resizeMode="contain" />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={[styles.optionButton, styles.simpleGameButton]} onPress={this.navigatePreGameScreen}>
+                                            <Image source={SimpleButton} style={styles.imageStyle} resizeMode="contain" />
+                                        </TouchableOpacity>
+                                    </View>
+                                </ImageBackground>
+                            </View>
+                            <View style={styles.footerContainer}>
+                                <View style={styles.aboutGame}>
+                                    <TouchableOpacity style={styles.touchableOpacityFooter} onPress={this.aboutModalHandler}>
+                                        <Image source={About} style={styles.imageStyleFooter} resizeMode="contain" />
                                     </TouchableOpacity>
                                 </View>
-                            </ImageBackground>
-                        </View>
-                        <View style={styles.footerContainer}>
-                            <View style={styles.aboutGame}>
-                                <TouchableOpacity style={styles.touchableOpacityFooter} onPress={this.aboutModalHandler}>
-                                    <Image source={About} style={styles.imageStyleFooter} resizeMode="contain" />
-                                </TouchableOpacity>
+                                <View style={styles.profile}>
+                                    <TouchableOpacity style={styles.touchableOpacityFooter} onPress={this.navigateProfileScreen}>
+                                        <Image source={Profile} style={styles.imageStyleFooter} resizeMode="contain" />
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                            <View style={styles.profile}>
-                                <TouchableOpacity style={styles.touchableOpacityFooter} onPress={this.navigateProfileScreen}>
-                                    <Image source={Profile} style={styles.imageStyleFooter} resizeMode="contain" />
-                                </TouchableOpacity>
-                            </View>
+                            <ModalAbout
+                                isVisible={this.state.showAboutModal}
+                                onClose={() => this.setState({ showAboutModal: false })} />
+                            <RegisterModal onRegister={username => this.onRegisterHandler(username)} isVisible={this.state.notLogged} />
                         </View>
-                        <ModalAbout
-                            isVisible={this.state.showAboutModal}
-                            onClose={() => this.setState({ showAboutModal: false })} />
-                        <RegisterModal onRegister={username => this.onRegisterHandler(username)} isVisible={this.state.notLogged} />
-                    </View>
-                </ImageBackground>
-            </SafeAreaView>
-        );
+                    </ImageBackground>
+                </SafeAreaView>
+            );
+        }
+        else return null
     }
 }
 
@@ -144,14 +148,15 @@ const styles = StyleSheet.create({
         width: '100%'
     },
     simpleGameButton: {
+        width: '50%',
+        height: '20%',
         justifyContent: 'flex-start',
-        marginLeft: '50%',
-        paddingBottom: 90,
+
     },
     onTimeGameButton: {
-        paddingTop: 90,
+        width: '50%',
+        height: '20%',
         justifyContent: 'flex-end',
-        marginLeft: '50%'
     },
     footerContainer: {
         flex: 1,
@@ -175,8 +180,8 @@ const styles = StyleSheet.create({
         width: bottomElementSize
     },
     imageStyle: {
-        width: "50%",
-        height: "50%"
+        width: "100%",
+        height: "100%"
     },
     imageStyleFooter: {
         width: "100%",
