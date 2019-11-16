@@ -46,7 +46,7 @@ export default class Timer extends Component {
         if (nextProps.isPaused) {
             clearImmediate(this.myInterval);
         }
-        if (!this.props.isReseted && nextProps.isReseted) {
+        if ((!this.props.isReseted && nextProps.isReseted)) {
             clearImmediate(this.myInterval);
             this.setState({
                 countSeconds: 0,
@@ -63,7 +63,26 @@ export default class Timer extends Component {
                 }, 1000);
             })
         }
-        else if (!nextProps.isPaused && this.props.isPaused) {
+        else if ((!nextProps.isPaused && this.props.isPaused)) {
+            this.setState({
+                countSeconds: secondsRemainder,
+                countMinutes: minutesRemainder
+            }, () => {
+                this.myInterval = setInterval(() => {
+                    this.animation()
+                    this.setState(
+                        prevState => ({
+                            countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
+                            countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
+                        }), () => this.props.onTimeExpired(this.state.count)
+                    )
+                }, 1000);
+            })
+        }
+        if (nextProps.isWarning) {
+            clearImmediate(this.myInterval);
+        }
+        else if (!nextProps.isWarning && this.props.isWarning) {
             this.setState({
                 countSeconds: secondsRemainder,
                 countMinutes: minutesRemainder

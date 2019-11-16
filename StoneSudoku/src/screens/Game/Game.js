@@ -81,7 +81,7 @@ class Game extends Component {
 
     deleteNumber = (i, j) => {
         if (this.checkExistInPredefinedPositions(i, j)) {
-            this.setWarningModalHandler("You can t delete predefined positions")
+            this.setWarningModalHandler("Aceasta pozitie nu poate fi eliminata!")
             return
         }
         let linesCopy = [...this.state.lines]
@@ -195,8 +195,7 @@ class Game extends Component {
             }
         }
 
-
-        if (i >= 0 && i < halfLength && j >= halfLength && j <= this.state.length - 1) {
+        if (i >= 0 && i < halfLength && j >= halfLength && j <= this.state.lines.length - 1) {
             for (let idxI = 0; idxI < halfLength; idxI++) {
                 for (let idxJ = halfLength; idxJ <= this.state.lines.length - 1; idxJ++) {
                     this.state.lines.forEach(ln => {
@@ -250,12 +249,12 @@ class Game extends Component {
 
     modifyCellContent = (i, j) => {
         if (!this.state.pressedKey && !this.state.deleteOption) {
-            this.setWarningModalHandler("You have to select a number")
+            this.setWarningModalHandler("Trebuie sa alegeti un numar pe care sa il adaugati!")
             return
         }
 
         if (this.checkExistInPredefinedPositions(i, j)) {
-            this.setWarningModalHandler("You can't modify predefined positions")
+            this.setWarningModalHandler("Aceasta pozitie nu poate fi modificata!")
             return
         }
 
@@ -280,13 +279,12 @@ class Game extends Component {
                                 let gameFinished = this.checkGameFinished()
                                 if (gameFinished) {
                                     this.gameFinished()
-                                    //this.resetState()
                                 }
                             }
                         })
                     }
                     else {
-                        this.setWarningModalHandler("Wrong position")
+                        this.setWarningModalHandler("Acest numar nu poate fi adaugat pe pozitia aleasa!")
                         return
                     }
                 }
@@ -357,6 +355,7 @@ class Game extends Component {
                                     count={0}
                                     isReseted={this.state.isReseted}
                                     isPaused={this.state.pausedModal}
+                                    isWarning={this.state.openWarningModal}
                                     setCompletedTime={(seconds, minutes) => this.setCompletedTimeHandler(seconds, minutes)}
                                     levelCompleted={this.state.levelCompleted} />
                             </View>

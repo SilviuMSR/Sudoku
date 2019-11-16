@@ -6,6 +6,11 @@ import ModalTemplate from './ModalTemplate';
 import AboutBackground from '../../assets/Modal/modal.png';
 import Back from '../../assets/Buttons/back.png'
 
+import CONSTANTS from '../../utils/constants'
+
+const elementSize = Math.floor(CONSTANTS.screenWidth / 6.5)
+const textSize = Math.floor(elementSize * 2 / 4.1)
+
 class Register extends Component {
 
     state = {
@@ -15,11 +20,11 @@ class Register extends Component {
         return (
             <ModalTemplate background={AboutBackground} isVisible={this.props.isVisible} onClose={this.props.onClose} >
                 <View style={[styles.center, { width: '70%', height: '45%', display: 'flex', textAlign: 'center', flexDirection: 'column', justifyContent: 'flex-end' }]}>
-                    <Text style={{ fontSize: 26, fontWeight: 'bold', paddingBottom: 8, textAlign: 'center' }}>{this.props.text}</Text>
+                    <Text style={{ fontSize: textSize, fontWeight: 'bold', paddingBottom: 8, textAlign: 'center' }}>{this.props.text}</Text>
                 </View>
                 <View style={[styles.button]}>
                     <TouchableOpacity style={[styles.max]} onPress={this.props.onClose}>
-                        <Image source={Back} style={{ height: 50, width: 50 }} />
+                        <Image source={Back} style={{ height: elementSize, width: elementSize }} />
                     </TouchableOpacity>
                 </View>
             </ModalTemplate>
