@@ -195,6 +195,21 @@ export default class Timer extends Component {
         }).start())
     }
 
+    displayCountdown = () => {
+        if (this.state.count <= 59) return <Text style={styles.counterText}>00:{this.state.count}</Text>
+        else {
+            let divider = this.state.count / 60
+            if (divider % 2 === 0) {
+                let seconds = this.state.count - (divider * 60)
+                return <Text style={styles.counterText}>{divider < 10 ? `0${divider}:${seconds}` : `${divider}:${seconds}`}</Text>
+            }
+            else {
+                let seconds = this.state.count - (Math.floor(divider) * 60)
+                return <Text style={styles.counterText}>{divider < 10 ? `0${Math.floor(divider)}:${seconds}` : `${Math.floor(divider)}:${seconds}`}</Text>
+            }
+        }
+    }
+
     render() {
         const { countSeconds, countMinutes } = this.state;
 
@@ -209,7 +224,7 @@ export default class Timer extends Component {
         return (
             <Animated.View style={[this.props.style, timerAnimationStyle]}>
                 {this.props.gameMode === CONSTANTS.SIMPLE_GAME_MODE ? <Text style={styles.counterText}>{countMinutes < 10 ? `0${countMinutes}` : countMinutes}:{countSeconds < 10 ? `0${countSeconds}` : countSeconds}</Text> :
-                    <Text style={styles.counterText}>{this.state.count}</Text>}
+                    <Text style={styles.counterText}>{this.displayCountdown()}</Text>}
             </Animated.View>
         );
     }
