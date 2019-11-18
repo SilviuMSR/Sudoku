@@ -28,7 +28,7 @@ export default class Timer extends Component {
                     prevState => ({
                         countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
                         countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
-                    }), () => this.props.onTimeExpired(this.state.count)
+                    })
                 )
             }, 1000);
         }
@@ -84,7 +84,7 @@ export default class Timer extends Component {
                             prevState => ({
                                 countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
                                 countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
-                            }), () => this.props.onTimeExpired(this.state.count)
+                            })
                         )
                     }, 1000);
                 })
@@ -117,7 +117,7 @@ export default class Timer extends Component {
                             prevState => ({
                                 countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
                                 countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
-                            }), () => this.props.onTimeExpired(this.state.count)
+                            })
                         )
                     }, 1000);
                 })
@@ -155,7 +155,7 @@ export default class Timer extends Component {
                             prevState => ({
                                 countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
                                 countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
-                            }), () => this.props.onTimeExpired(this.state.count)
+                            })
                         )
                     }, 1000);
                 })
