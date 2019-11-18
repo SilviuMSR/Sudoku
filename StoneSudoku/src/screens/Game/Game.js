@@ -41,7 +41,8 @@ class Game extends Component {
         openWinModal: false,
         levelTime: "",
         pausedModal: false,
-        isReseted: false
+        isReseted: false,
+        renderPage: false
     }
 
     fetchCurrentLevel = () => {
@@ -62,11 +63,11 @@ class Game extends Component {
                 }
                 countSplitedArray++
             })
-            this.setState({ lines: resultArray, currentLevel: res.item(0) }, () => this.setPredefinedPositions())
+            this.setState({ lines: resultArray, currentLevel: res.item(0), renderPage: true }, () => this.setPredefinedPositions())
         })
     }
 
-    componentDidMount() {
+    componentWillMount() {
         // set keyboard
         this.setState({
             keyboard: CONSTANTS.KEYBOARD
@@ -325,17 +326,22 @@ class Game extends Component {
         if (seconds >= 10) levelTime = levelTime.concat(seconds)
 
         this.setState({ levelCompleted: false, levelTime: levelTime }, () => {
-            if (this.state.currentLevel.done !== 1) {
-                this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty, this.state.levelTime)
+            if (this.props.level.gameMode === CONSTANTS.SIMPLE_GAME_MODE) {
+                if (this.state.currentLevel.doneSimple !== 1) {
+                    this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty, this.state.levelTime)
+                }
+                else {
+                    let timeSplitCurrentLevel = this.state.currentLevel.time.split(":")
+                    if (Number(timeSplitCurrentLevel[0] > Number(minutes))) {
+                        this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty, this.state.levelTime)
+                    }
+                    else if (Number(timeSplitCurrentLevel[1] > Number(seconds))) {
+                        this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty, this.state.levelTime)
+                    }
+                }
             }
             else {
-                let timeSplitCurrentLevel = this.state.currentLevel.time.split(":")
-                if (Number(timeSplitCurrentLevel[0] > Number(minutes))) {
-                    this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty, this.state.levelTime)
-                }
-                else if (Number(timeSplitCurrentLevel[1] > Number(seconds))) {
-                    this.props.updateLevel(this.props.level.levelId, this.props.level.difficulty, this.state.levelTime)
-                }
+                this.props.updateLevelCountdown(this.props.level.levelId, this.props.level.difficulty)
             }
         })
     }
@@ -345,55 +351,59 @@ class Game extends Component {
     resetPauseModalHandler = () => this.setState({ pausedModal: false })
 
     render() {
-        return (
-            <BaseScreen>
-                <View style={styles.gameContainer}>
-                    <WarningModal isVisible={this.state.openWarningModal} text={this.state.warningMessage} onClose={() => this.setState({ warningMessage: "", openWarningModal: false })} />
-                    <WinModal isVisible={this.state.openWinModal} onClose={() => this.setState({ openWinModal: false })} />
-                    <View style={[styles.gameDetailsContainer, { width: size }]}>
-                        <ImageBackground source={TopBar} style={{ width: '100%', height: '85%', display: 'flex', flexDirection: 'row' }}>
-                            <View style={{ paddingTop: 6, marginLeft: (size * 0.87 / 2) }}>
-                                <Timer
-                                    onTimeExpired={() => { }}
-                                    count={0}
-                                    isReseted={this.state.isReseted}
-                                    isPaused={this.state.pausedModal}
-                                    isWarning={this.state.openWarningModal}
-                                    setCompletedTime={(seconds, minutes) => this.setCompletedTimeHandler(seconds, minutes)}
-                                    levelCompleted={this.state.levelCompleted} />
-                            </View>
-                            <TouchableOpacity onPress={this.onPauseHandler} style={{ width: topBarElement, height: topBarElement, marginLeft: 'auto' }}>
-                                <Image source={CancelButton} style={{ width: topBarElement, height: topBarElement }} />
-                            </TouchableOpacity>
-                        </ImageBackground>
-                    </View>
-                    <View style={styles.matrixContainer}>
-                        <ImageBackground source={Board} style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }} resizeMode="stretch">
-                            <RenderMatrix selectedNumber={this.state.pressedKey} size={this.props.level.difficulty === 'easy' ? 6 : this.props.level.difficulty === 'medium' ? 8 : 11} lines={this.state.lines} modifyCell={(i, j) => this.modifyCellContent(i, j)} />
-                        </ImageBackground>
-                    </View>
-                    <View style={styles.keyboardContainer}>
-                        <TouchableOpacity onPress={() => this.setState({ deleteOption: true, pressedKey: null })} style={[styles.center, { width: elementSize, height: elementSize, paddingRight: '1%' }]}>
-                            <ImageBackground source={StoneSquare} style={[styles.center, styles.max]} resizeMode='stretch'>
-                                <Text style={{ color: 'white', fontSize: textSize, fontWeight: 'bold', position: 'relative', bottom: '5%' }}>X</Text>
+        if (this.state.renderPage) {
+            return (
+                <BaseScreen>
+                    <View style={styles.gameContainer}>
+                        <WarningModal isVisible={this.state.openWarningModal} text={this.state.warningMessage} onClose={() => this.setState({ warningMessage: "", openWarningModal: false })} />
+                        <WinModal isVisible={this.state.openWinModal} onClose={() => this.setState({ openWinModal: false })} />
+                        <View style={[styles.gameDetailsContainer, { width: size }]}>
+                            <ImageBackground source={TopBar} style={{ width: '100%', height: '85%', display: 'flex', flexDirection: 'row' }}>
+                                <View style={{ paddingTop: 6, marginLeft: (size * 0.87 / 2) }}>
+                                    <Timer
+                                        onTimeExpired={() => { }}
+                                        count={this.props.level.gameMode === CONSTANTS.COUNTDOWN_GAME_MODE ? this.state.currentLevel.timeCountdown : 0}
+                                        isReseted={this.state.isReseted}
+                                        isPaused={this.state.pausedModal}
+                                        isWarning={this.state.openWarningModal}
+                                        setCompletedTime={(seconds, minutes) => this.setCompletedTimeHandler(seconds, minutes)}
+                                        levelCompleted={this.state.levelCompleted}
+                                        gameMode={this.props.level.gameMode} />
+                                </View>
+                                <TouchableOpacity onPress={this.onPauseHandler} style={{ width: topBarElement, height: topBarElement, marginLeft: 'auto' }}>
+                                    <Image source={CancelButton} style={{ width: topBarElement, height: topBarElement }} />
+                                </TouchableOpacity>
                             </ImageBackground>
-                        </TouchableOpacity>
-                        {
-                            this.state.keyboard.slice(0, this.state.lines.length).map(key => {
-                                return (
-                                    <TouchableOpacity onPress={() => this.onKeyPressHandler(key.number)} style={[styles.center, { width: elementSize, height: elementSize, paddingRight: '1%' }]}>
-                                        <ImageBackground source={StoneSquare} style={[styles.center, styles.max]} resizeMode='stretch'>
-                                            <Text style={{ color: 'white', fontSize: textSize, fontWeight: 'bold', position: 'relative', bottom: '5%' }}>{key.number}</Text>
-                                        </ImageBackground>
-                                    </TouchableOpacity>
-                                )
-                            })
-                        }
+                        </View>
+                        <View style={styles.matrixContainer}>
+                            <ImageBackground source={Board} style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }} resizeMode="stretch">
+                                <RenderMatrix selectedNumber={this.state.pressedKey} size={this.props.level.difficulty === 'easy' ? 6 : this.props.level.difficulty === 'medium' ? 8 : 11} lines={this.state.lines} modifyCell={(i, j) => this.modifyCellContent(i, j)} />
+                            </ImageBackground>
+                        </View>
+                        <View style={styles.keyboardContainer}>
+                            <TouchableOpacity onPress={() => this.setState({ deleteOption: true, pressedKey: null })} style={[styles.center, { width: elementSize, height: elementSize, paddingRight: '1%' }]}>
+                                <ImageBackground source={StoneSquare} style={[styles.center, styles.max]} resizeMode='stretch'>
+                                    <Text style={{ color: 'white', fontSize: textSize, fontWeight: 'bold', position: 'relative', bottom: '5%' }}>X</Text>
+                                </ImageBackground>
+                            </TouchableOpacity>
+                            {
+                                this.state.keyboard.slice(0, this.state.lines.length).map(key => {
+                                    return (
+                                        <TouchableOpacity onPress={() => this.onKeyPressHandler(key.number)} style={[styles.center, { width: elementSize, height: elementSize, paddingRight: '1%' }]}>
+                                            <ImageBackground source={StoneSquare} style={[styles.center, styles.max]} resizeMode='stretch'>
+                                                <Text style={{ color: 'white', fontSize: textSize, fontWeight: 'bold', position: 'relative', bottom: '5%' }}>{key.number}</Text>
+                                            </ImageBackground>
+                                        </TouchableOpacity>
+                                    )
+                                })
+                            }
+                        </View>
                     </View>
-                </View>
-                <PauseModal onReset={this.resetState} onResume={this.resetPauseModalHandler} isVisible={this.state.pausedModal} />
-            </BaseScreen>
-        );
+                    <PauseModal onReset={this.resetState} onResume={this.resetPauseModalHandler} isVisible={this.state.pausedModal} />
+                </BaseScreen>
+            )
+        }
+        else return null;
     }
 }
 
@@ -443,6 +453,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     getFromTableByOptions: (levelId, difficulty) => dispatch(DATABASE.getFromTableByOptions(levelId, difficulty)),
     updateLevel: (levelId, difficulty, time) => dispatch(DATABASE.updateLevel(levelId, difficulty, time)),
+    updateLevelCountdown: (levelId, difficulty) => dispatch(DATABASE.updateLevelCountdown(levelId, difficulty))
 })
 
 export default connect(

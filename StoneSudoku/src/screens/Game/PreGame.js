@@ -15,7 +15,7 @@ import CONSTANTS from '../../utils/constants'
 import * as LEVELS from '../../store/actions/level'
 import * as DATABASE from '../../store/actions/database'
 
-const size = CONSTANTS.screenWidth 
+const size = CONSTANTS.screenWidth
 const screenHeight = CONSTANTS.screenHeight
 
 class PreGame extends Component {
@@ -49,8 +49,12 @@ class PreGame extends Component {
         ]
     }
 
-    navigateHomeScreen = () => this.props.navigation.navigate('Home');
-    navigateGameScreen = () => this.props.navigation.navigate('Game');
+    navigateHomeScreen = () => {
+        this.props.navigation.navigate('Home');
+    }
+    navigateGameScreen = () => {
+        this.props.navigation.navigate('Game');
+    }
 
     fetchLevels = () => {
         this.props.getFromTable().then(res => {
@@ -111,7 +115,7 @@ class PreGame extends Component {
                 <ImageBackground source={Background} style={styles.max} resizeMode='cover'>
                     <View style={styles.preGameContainer}>
                         <ImageBackground source={Header} style={styles.headerContainer}>
-                            <View style={[styles.headerOptions, { width: size}]}>
+                            <View style={[styles.headerOptions, { width: size }]}>
                                 <TouchableOpacity style={[styles.optionButton], {}} onPress={() => this.selectLevelHandler("easy")}>
                                     <Image source={Easy} style={[styles.imageStyle]} resizeMode="contain" />
                                 </TouchableOpacity>
@@ -135,9 +139,12 @@ class PreGame extends Component {
                                 renderItem={({ item }) => <Level
                                     playGame={(levelId) => this.playGameHandler(levelId)}
                                     level={item}
-                                    done={item.done || ''}
+                                    doneSimple={item.doneSimple || ''}
+                                    doneCountdown={item.doneCountdown || ''}
                                     name={item.name || ''}
-                                    time={item.time || null}
+                                    timeSimple={item.timeSimple || null}
+                                    timeCountdown={item.timeCountdown || null}
+                                    gameMode={this.props.level.gameMode}
                                 />}
                             />
                         </View>

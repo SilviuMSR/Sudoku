@@ -10,14 +10,22 @@ const size = CONSTANTS.screenWidth / 2.2
 
 export default props => (
     <View style={{ marginTop: 12, paddingRight: 12 }}>
-        <ImageBackground source={props.done === 1 ? DoneLevel : NotDoneLevel} style={styles.imageStyle} resizeMode="contain">
-            <Text style={styles.roundTimeText}>{props.time}</Text>
+        {props.gameMode === CONSTANTS.SIMPLE_GAME_MODE ? <ImageBackground source={props.doneSimple === 1 ? DoneLevel : NotDoneLevel} style={styles.imageStyle} resizeMode="contain">
+            <Text style={styles.roundTimeText}>{props.timeSimple}</Text>
             <TouchableOpacity onPress={() => props.playGame(props.level.id)} style={styles.touchableOpacityContainer}>
                 <ImageBackground source={PlayButton} style={styles.playButton} resizeMode="center">
                     <Text style={styles.playText}>JOACA</Text>
                 </ImageBackground>
             </TouchableOpacity>
-        </ImageBackground>
+        </ImageBackground> :
+            <ImageBackground source={props.doneCountdown === 1 ? DoneLevel : NotDoneLevel} style={styles.imageStyle} resizeMode="contain">
+                <Text style={styles.roundTimeText}>{props.timeCountdown} X</Text>
+                <TouchableOpacity onPress={() => props.playGame(props.level.id)} style={styles.touchableOpacityContainer}>
+                    <ImageBackground source={PlayButton} style={styles.playButton} resizeMode="center">
+                        <Text style={styles.playText}>JOACA</Text>
+                    </ImageBackground>
+                </TouchableOpacity>
+            </ImageBackground>}
     </View>
 );
 

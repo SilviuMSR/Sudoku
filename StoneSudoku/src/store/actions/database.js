@@ -28,7 +28,7 @@ export const createDatabaseTable = () => (dispatch, getState) => new Promise((re
     return db.transaction(tx => {
         // tx.executeSql('DROP TABLE IF EXISTS levels')
         // tx.executeSql('DROP TABLE IF EXISTS users')
-        tx.executeSql('CREATE TABLE IF NOT EXISTS levels(id INTEGER PRIMARY KEY AUTOINCREMENT, difficulty VARCHAR(20), size INTEGER, done INTEGER, name VARCHAR(20), time VARCHAR(10), level VARCHAR(255))', [], (txRes, tableRes) => {
+        tx.executeSql('CREATE TABLE IF NOT EXISTS levels(id INTEGER PRIMARY KEY AUTOINCREMENT, difficulty VARCHAR(20), size INTEGER, doneSimple INTEGER, doneCountdown INTEGER, name VARCHAR(20), timeSimple VARCHAR(10), timeCountdown INTEGER, level VARCHAR(255))', [], (txRes, tableRes) => {
             tx.executeSql('CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR(50), phoneId VARCHAR(50))', [], () => {
                 return resolve({
                     created: true
@@ -66,7 +66,7 @@ export const checkExistingUser = phoneId => (dispatch, getState) => new Promise(
 export const insertInTable = level => (dispatch, getState) => new Promise((resolve, reject) => {
     const { db } = getState().database;
     return db.transaction(tx => {
-        tx.executeSql("INSERT INTO levels (difficulty, size, done, name, time, level) values (?, ?, ?, ?, ?, ?)", [level.difficulty, level.size, level.done, level.name, level.time, level.level])
+        tx.executeSql("INSERT INTO levels (difficulty, size, doneSimple, doneCountdown, name, timeSimple, timeCountdown, level) values (?,?,?, ?, ?, ?, ?, ?)", [level.difficulty, level.size, level.doneSimple, level.doneCountdown, level.name, level.timeSimple, level.timeCountdown, level.level])
         err => {
             return reject(err.message)
         }
@@ -96,7 +96,17 @@ export const getFromTableByOptions = (levelId, difficulty) => (dispatch, getStat
 export const updateLevel = (levelId, difficulty, time) => (dispatch, getState) => new Promise((resolve, reject) => {
     const { db } = getState().database;
     return db.transaction(tx => {
-        tx.executeSql("UPDATE levels SET done=?, time=? WHERE id=? AND difficulty=?", [1, time, levelId, difficulty], (tx, res) => {
+        tx.executeSql("UPDATE levels SET doneSimple=?, timeSimple=? WHERE id=? AND difficulty=?", [1, time, levelId, difficulty], (tx, res) => {
+            return resolve(res.rows)
+        })
+        err => reject(err.message)
+    })
+})
+
+export const updateLevelCountdown = (levelId, difficulty, time) => (dispatch, getState) => new Promise((resolve, reject) => {
+    const { db } = getState().database;
+    return db.transaction(tx => {
+        tx.executeSql("UPDATE levels SET doneCountdown=? WHERE id=? AND difficulty=?", [1, levelId, difficulty], (tx, res) => {
             return resolve(res.rows)
         })
         err => reject(err.message)

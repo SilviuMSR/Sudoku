@@ -14,6 +14,7 @@ import OnTimeButton from '../../assets/Buttons/onTimeButton.png'
 import SimpleButton from '../../assets/Buttons/simpleButton.png'
 
 import * as DATABASE from '../../store/actions/database'
+import * as LEVEL from '../../store/actions/level'
 import CONSTANTS from '../../utils/constants'
 
 const bottomElementSize = Math.floor(CONSTANTS.screenWidth / 7.5) - 2
@@ -64,7 +65,9 @@ class Home extends Component {
             )
     }
 
-    navigatePreGameScreen = () => this.props.navigation.navigate('PreGame');
+    navigatePreGameScreen = mode => {
+        this.props.setGameMode(mode).then(() => this.props.navigation.navigate('PreGame'))
+    }
     navigateProfileScreen = () => this.props.navigation.navigate('Profile');
 
     aboutModalHandler = () => {
@@ -88,10 +91,10 @@ class Home extends Component {
                             <View style={{ flex: 4, width: '100%', justifyContent: 'flex-end', alignItems: 'center' }}>
                                 <ImageBackground imageStyle={{ height: screenHeight / 2 }} style={{ width: screenWidth - 75, height: screenHeight / 2 }} resizeMode='contain' source={ButtonsContainer}>
                                     <View style={styles.optionsContainer}>
-                                        <TouchableOpacity style={[styles.optionButton, styles.onTimeGameButton]} onPress={this.navigatePreGameScreen}>
+                                        <TouchableOpacity style={[styles.optionButton, styles.onTimeGameButton]} onPress={() => this.navigatePreGameScreen(CONSTANTS.COUNTDOWN_GAME_MODE)}>
                                             <Image source={OnTimeButton} style={styles.imageStyle} resizeMode="contain" />
                                         </TouchableOpacity>
-                                        <TouchableOpacity style={[styles.optionButton, styles.simpleGameButton]} onPress={this.navigatePreGameScreen}>
+                                        <TouchableOpacity style={[styles.optionButton, styles.simpleGameButton]} onPress={() => this.navigatePreGameScreen(CONSTANTS.SIMPLE_GAME_MODE)}>
                                             <Image source={SimpleButton} style={styles.imageStyle} resizeMode="contain" />
                                         </TouchableOpacity>
                                     </View>
@@ -199,7 +202,8 @@ const mapDispatchToProps = dispatch => ({
     insertInTable: level => dispatch(DATABASE.insertInTable(level)),
     checkExistingUser: phoneId => dispatch(DATABASE.checkExistingUser(phoneId)),
     setConnectedUserName: username => dispatch(DATABASE.setConnectedUserName(username)),
-    createUser: (username, phoneId) => dispatch(DATABASE.createUser(username, phoneId))
+    createUser: (username, phoneId) => dispatch(DATABASE.createUser(username, phoneId)),
+    setGameMode: mode => dispatch(LEVEL.setGameMode(mode))
 })
 
 export default connect(

@@ -21,87 +21,165 @@ export default class Timer extends Component {
 
     componentDidMount() {
         this.animation();
-        this.myInterval = setInterval(() => {
-            this.animation()
-            this.setState(
-                prevState => ({
-                    countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
-                    countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
-                }), () => this.props.onTimeExpired(this.state.count)
-            )
-        }, 1000);
+        if (this.props.gameMode === CONSTANTS.SIMPLE_GAME_MODE) {
+            this.myInterval = setInterval(() => {
+                this.animation()
+                this.setState(
+                    prevState => ({
+                        countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
+                        countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
+                    }), () => this.props.onTimeExpired(this.state.count)
+                )
+            }, 1000);
+        }
+        else {
+            this.myIntervalCountdown = setInterval(() => {
+                this.animation()
+                this.setState(
+                    prevState => ({
+                        count: prevState.count - 1
+                    }), () => this.props.onTimeExpired(this.state.count)
+                )
+            }, 1000);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
         let secondsRemainder = this.state.countSeconds
         let minutesRemainder = this.state.countMinutes
+        let countDownReminder = this.state.count
         if (nextProps.levelCompleted) {
-            clearImmediate(this.myInterval);
-            this.props.setCompletedTime(this.state.countSeconds, this.state.countMinutes)
-            this.setState({
-                countSeconds: 0,
-                countMinutes: 0
-            })
+            if (this.props.gameMode === CONSTANTS.SIMPLE_GAME_MODE) {
+                clearImmediate(this.myInterval);
+                this.props.setCompletedTime(this.state.countSeconds, this.state.countMinutes)
+                this.setState({
+                    countSeconds: 0,
+                    countMinutes: 0
+                })
+            }
+            else {
+                clearImmediate(this.myIntervalCountdown);
+                this.props.setCompletedTime(this.state.count)
+                this.setState({
+                    count: this.props.count
+                })
+            }
         }
         if (nextProps.isPaused) {
-            clearImmediate(this.myInterval);
+            if (this.props.gameMode === CONSTANTS.SIMPLE_GAME_MODE) {
+                clearImmediate(this.myInterval);
+            }
+            else clearImmediate(this.myIntervalCountdown)
         }
         if ((!this.props.isReseted && nextProps.isReseted)) {
-            clearImmediate(this.myInterval);
-            this.setState({
-                countSeconds: 0,
-                countMinutes: 0
-            }, () => {
-                this.myInterval = setInterval(() => {
-                    this.animation()
-                    this.setState(
-                        prevState => ({
-                            countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
-                            countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
-                        }), () => this.props.onTimeExpired(this.state.count)
-                    )
-                }, 1000);
-            })
+            if (this.props.gameMode === CONSTANTS.SIMPLE_GAME_MODE) {
+                clearImmediate(this.myInterval);
+                this.setState({
+                    countSeconds: 0,
+                    countMinutes: 0
+                }, () => {
+                    this.myInterval = setInterval(() => {
+                        this.animation()
+                        this.setState(
+                            prevState => ({
+                                countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
+                                countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
+                            }), () => this.props.onTimeExpired(this.state.count)
+                        )
+                    }, 1000);
+                })
+            }
+            else {
+                clearImmediate(this.myIntervalCountdown);
+                this.setState({
+                    count: this.props.count,
+                }, () => {
+                    this.myIntervalCountdown = setInterval(() => {
+                        this.animation()
+                        this.setState(
+                            prevState => ({
+                                count: prevState.count - 1
+                            }), () => this.props.onTimeExpired(this.state.count)
+                        )
+                    }, 1000);
+                })
+            }
         }
         else if ((!nextProps.isPaused && this.props.isPaused)) {
-            this.setState({
-                countSeconds: secondsRemainder,
-                countMinutes: minutesRemainder
-            }, () => {
-                this.myInterval = setInterval(() => {
-                    this.animation()
-                    this.setState(
-                        prevState => ({
-                            countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
-                            countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
-                        }), () => this.props.onTimeExpired(this.state.count)
-                    )
-                }, 1000);
-            })
+            if (this.props.gameMode === CONSTANTS.SIMPLE_GAME_MODE) {
+                this.setState({
+                    countSeconds: secondsRemainder,
+                    countMinutes: minutesRemainder
+                }, () => {
+                    this.myInterval = setInterval(() => {
+                        this.animation()
+                        this.setState(
+                            prevState => ({
+                                countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
+                                countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
+                            }), () => this.props.onTimeExpired(this.state.count)
+                        )
+                    }, 1000);
+                })
+            }
+            else {
+                this.setState({
+                    count: countDownReminder
+                }, () => {
+                    this.myIntervalCountdown = setInterval(() => {
+                        this.animation()
+                        this.setState(
+                            prevState => ({
+                                count: prevState.count - 1,
+                            }), () => this.props.onTimeExpired(this.state.count)
+                        )
+                    }, 1000);
+                })
+            }
         }
         if (nextProps.isWarning) {
-            clearImmediate(this.myInterval);
+            if (this.props.gameMode === CONSTANTS.SIMPLE_GAME_MODE) {
+                clearImmediate(this.myInterval);
+            }
+            else clearImmediate(this.myIntervalCountdown)
         }
         else if (!nextProps.isWarning && this.props.isWarning) {
-            this.setState({
-                countSeconds: secondsRemainder,
-                countMinutes: minutesRemainder
-            }, () => {
-                this.myInterval = setInterval(() => {
-                    this.animation()
-                    this.setState(
-                        prevState => ({
-                            countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
-                            countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
-                        }), () => this.props.onTimeExpired(this.state.count)
-                    )
-                }, 1000);
-            })
+            if (this.props.gameMode === CONSTANTS.SIMPLE_GAME_MODE) {
+                this.setState({
+                    countSeconds: secondsRemainder,
+                    countMinutes: minutesRemainder
+                }, () => {
+                    this.myInterval = setInterval(() => {
+                        this.animation()
+                        this.setState(
+                            prevState => ({
+                                countSeconds: prevState.countSeconds === 59 ? 0 : prevState.countSeconds + 1,
+                                countMinutes: prevState.countSeconds === 59 ? prevState.countMinutes + 1 : prevState.countMinutes,
+                            }), () => this.props.onTimeExpired(this.state.count)
+                        )
+                    }, 1000);
+                })
+            }
+            else {
+                this.setState({
+                    count: countDownReminder
+                }, () => {
+                    this.myIntervalCountdown = setInterval(() => {
+                        this.animation()
+                        this.setState(
+                            prevState => ({
+                                count: prevState.count - 1,
+                            }), () => this.props.onTimeExpired(this.state.count)
+                        )
+                    }, 1000);
+                })
+            }
         }
     }
 
     componentWillUnmount() {
         clearImmediate(this.myInterval);
+        clearImmediate(this.myIntervalCountdown)
         SCALE_VALUE = 1;
     }
 
@@ -130,7 +208,8 @@ export default class Timer extends Component {
 
         return (
             <Animated.View style={[this.props.style, timerAnimationStyle]}>
-                <Text style={styles.counterText}>{countMinutes < 10 ? `0${countMinutes}` : countMinutes}:{countSeconds < 10 ? `0${countSeconds}` : countSeconds}</Text>
+                {this.props.gameMode === CONSTANTS.SIMPLE_GAME_MODE ? <Text style={styles.counterText}>{countMinutes < 10 ? `0${countMinutes}` : countMinutes}:{countSeconds < 10 ? `0${countSeconds}` : countSeconds}</Text> :
+                    <Text style={styles.counterText}>{this.state.count}</Text>}
             </Animated.View>
         );
     }
