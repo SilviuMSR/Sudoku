@@ -155,6 +155,11 @@ class Game extends Component {
         this.setState({ levelCompleted: true })
     }
 
+    gameLose = () => {
+        this.setState({ levelCompleted: false })
+        this.navigateHomeScreen()
+    }
+
     checkAlreadyExistInLinesOrColumn = searchIn => {
         if (this.state.pressedKey) {
             let filterResult = searchIn.map(field => field.number).filter(number => parseInt(number) === this.state.pressedKey)
@@ -350,6 +355,10 @@ class Game extends Component {
 
     resetPauseModalHandler = () => this.setState({ pausedModal: false })
 
+    onTimeExpiredHandler = count => {
+        if (count === 0) this.gameLose()
+    }
+
     render() {
         if (this.state.renderPage) {
             return (
@@ -361,7 +370,7 @@ class Game extends Component {
                             <ImageBackground source={TopBar} style={{ width: '100%', height: '85%', display: 'flex', flexDirection: 'row' }}>
                                 <View style={{ paddingTop: 6, marginLeft: (size * 0.87 / 2) }}>
                                     <Timer
-                                        onTimeExpired={() => { }}
+                                        onTimeExpired={count => this.onTimeExpiredHandler(count)}
                                         count={this.props.level.gameMode === CONSTANTS.COUNTDOWN_GAME_MODE ? this.state.currentLevel.timeCountdown : 0}
                                         isReseted={this.state.isReseted}
                                         isPaused={this.state.pausedModal}

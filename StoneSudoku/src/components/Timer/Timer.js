@@ -201,11 +201,11 @@ export default class Timer extends Component {
             let divider = this.state.count / 60
             if (divider % 2 === 0) {
                 let seconds = this.state.count - (divider * 60)
-                return <Text style={styles.counterText}>{divider < 10 ? `0${divider}:${seconds}` : `${divider}:${seconds}`}</Text>
+                return <Text style={styles.counterText}>{divider < 10 ? `0${divider}:${seconds < 10 ? `0${seconds}` : seconds}` : `${divider}:${seconds < 10 ? `0${seconds}` : seconds}`}</Text>
             }
             else {
                 let seconds = this.state.count - (Math.floor(divider) * 60)
-                return <Text style={styles.counterText}>{divider < 10 ? `0${Math.floor(divider)}:${seconds}` : `${Math.floor(divider)}:${seconds}`}</Text>
+                return <Text style={styles.counterText}>{divider < 10 ? `0${Math.floor(divider)}:${seconds < 10 ? `0${seconds}` : seconds}` : `${Math.floor(divider)}:${seconds < 10 ? `0${seconds}` : seconds}`}</Text>
             }
         }
     }
