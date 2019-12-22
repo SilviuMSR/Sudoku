@@ -11,7 +11,8 @@ export default class RenderMatrix extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            cellSize: Math.floor(Number(Dimensions.get('window').width) / props.size) - 2
+            cellSize: Math.floor(Number(Dimensions.get('window').width) / props.size) - 2,
+            counter: 0
         };
     }
 
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
     },
     buttonSize: {
         width: '90%',
-        height: '90%'
+        height: '90%',
     },
     center: {
         justifyContent: 'center',

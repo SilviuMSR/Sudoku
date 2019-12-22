@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, ImageBackground, Image, TouchableOpacity } from
 
 import DoneLevel from '../../assets/Others/doneLevel.png'
 import NotDoneLevel from '../../assets/Others/notDone.png'
+import CountDownLevel from '../../assets/Others/countdownyes.png'
+import NoCountDownLevel from '../../assets/Others/countdownno.png'
 import PlayButton from '../../assets/Buttons/playButton.png'
 import CONSTANTS from '../../utils/constants'
 
@@ -18,10 +20,10 @@ export default props => (
                 </ImageBackground>
             </TouchableOpacity>
         </ImageBackground> :
-            <ImageBackground source={props.doneCountdown === 1 ? DoneLevel : NotDoneLevel} style={styles.imageStyle} resizeMode="contain">
-                <Text style={styles.roundTimeText}>{props.timeCountdown} X</Text>
+            <ImageBackground source={props.doneCountdown === 1 ? CountDownLevel : NoCountDownLevel} style={styles.imageStyle} resizeMode="contain">
+                {props.doneCountdown === 1 ? <Text> </Text> : <Text style={styles.roundTimeTextCount}>{props.timeCountdown} sec</Text>}
                 <TouchableOpacity onPress={() => props.playGame(props.level.id)} style={styles.touchableOpacityContainer}>
-                    <ImageBackground source={PlayButton} style={styles.playButton} resizeMode="center">
+                    <ImageBackground source={PlayButton} style={props.doneCountdown === 1 ? styles.playButtonCount : styles.playButtonCountNotDone} resizeMode="center">
                         <Text style={styles.playText}>JOACA</Text>
                     </ImageBackground>
                 </TouchableOpacity>
@@ -43,6 +45,16 @@ const styles = StyleSheet.create({
         position: 'relative',
         top: '50%'
     },
+    playButtonCount: {
+        height: 33,
+        position: 'relative',
+        top: '70%'
+    },
+    playButtonCountNotDone: {
+        height: 33,
+        position: 'relative',
+        top: '55%'
+    },
     roundTimeText: {
         color: 'white',
         fontSize: 18,
@@ -50,6 +62,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         position: 'relative',
         top: '53%'
+    },
+    roundTimeTextCount: {
+        color: 'white',
+        fontSize: 18,
+        fontWeight: "bold",
+        textAlign: 'center',
+        position: 'relative',
+        top: '48%'
     },
     playText: {
         color: 'white',

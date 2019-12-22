@@ -167,6 +167,8 @@ class Game extends Component {
         }
     }
 
+    // Create checkAlreadyEixistInSquare for all difficulties 4 / 6 / 9
+
     checkAlreadyExistInSquare = (i, j) => {
         let halfLength = this.state.lines.length / 2
         let returnedValue = false
@@ -386,7 +388,7 @@ class Game extends Component {
                         </View>
                         <View style={styles.matrixContainer}>
                             <ImageBackground source={Board} style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }} resizeMode="stretch">
-                                <RenderMatrix selectedNumber={this.state.pressedKey} size={this.props.level.difficulty === 'easy' ? 6 : this.props.level.difficulty === 'medium' ? 8 : 11} lines={this.state.lines} modifyCell={(i, j) => this.modifyCellContent(i, j)} />
+                                <RenderMatrix matrixSize={this.state.lines.length} selectedNumber={this.state.pressedKey} size={this.props.level.difficulty === 'easy' ? 6 : this.props.level.difficulty === 'medium' ? 8 : 11} lines={this.state.lines} modifyCell={(i, j) => this.modifyCellContent(i, j)} />
                             </ImageBackground>
                         </View>
                         <View style={styles.keyboardContainer}>
