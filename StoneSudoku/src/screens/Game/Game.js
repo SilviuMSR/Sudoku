@@ -16,7 +16,7 @@ import TopBar from '../../assets/Others/topBar.png'
 import Board from '../../assets/Others/board.png'
 import StoneSquare from '../../assets/Buttons/stoneSquare.png'
 import CancelButton from '../../assets/Buttons/xButton.png'
-import ResetButton from '../../assets/Buttons/reset.png'
+import MenuButton from '../../assets/Others/menu.png'
 
 const size = CONSTANTS.screenWidth
 const elementSize = Math.floor(CONSTANTS.screenWidth / 10) - 2
@@ -370,7 +370,10 @@ class Game extends Component {
                         <WinModal isVisible={this.state.openWinModal} onClose={() => this.setState({ openWinModal: false })} />
                         <View style={[styles.gameDetailsContainer, { width: size }]}>
                             <ImageBackground source={TopBar} style={{ width: '100%', height: '85%', display: 'flex', flexDirection: 'row' }}>
-                                <View style={{ paddingTop: 6, marginLeft: (size * 0.87 / 2) }}>
+                                <TouchableOpacity onPress={this.onPauseHandler} style={{ width: topBarElement, height: topBarElement }}>
+                                    <Image source={MenuButton} style={{ width: topBarElement, height: topBarElement }} />
+                                </TouchableOpacity>
+                                <View style={{ paddingTop: 6, marginLeft: (size * 0.87 / 2.8) }}>
                                     <Timer
                                         onTimeExpired={count => this.onTimeExpiredHandler(count)}
                                         count={this.props.level.gameMode === CONSTANTS.COUNTDOWN_GAME_MODE ? this.state.currentLevel.timeCountdown : 0}
@@ -381,7 +384,7 @@ class Game extends Component {
                                         levelCompleted={this.state.levelCompleted}
                                         gameMode={this.props.level.gameMode} />
                                 </View>
-                                <TouchableOpacity onPress={this.onPauseHandler} style={{ width: topBarElement, height: topBarElement, marginLeft: 'auto' }}>
+                                <TouchableOpacity onPress={() => this.navigateHomeScreen()} style={{ width: topBarElement, height: topBarElement, marginLeft: 'auto' }}>
                                     <Image source={CancelButton} style={{ width: topBarElement, height: topBarElement }} />
                                 </TouchableOpacity>
                             </ImageBackground>
